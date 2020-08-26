@@ -1,0 +1,460 @@
+{{ header }}
+{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			{{ smm_menu }}
+		</div>
+	</div>
+	<div class="smmposting-container">
+		{% if error_warning %}
+			<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if success %}
+			<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		<div class="row mb-4">
+			<div class="col-sm-12">
+				<div class="pull-right">
+					<a onclick="$('#form').submit();" class="btn btn-primary btn-md waves-effect waves-light m-b-30"><i class="fa fa-save"></i></a>
+					<a href="{{ project_list }}" data-toggle="tooltip" class="btn btn-default"><i class="fa fa-reply"></i></a>
+				</div>
+			</div>
+		</div>
+		<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+			<div class="card panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fa fa-briefcase"></i> {{ text_project }}</h3>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel-body">
+							<div class="well" style="overflow: auto;">
+								<div class="col-lg-12">
+									<div class="card-box">
+										<label>{{ text_project_name }}</label>
+										<input placeholder="{{ text_project_placeholder }}" class="form-control" type="text" name="project_name" value="{{ project.project_name }}" size="40" />
+										<br>
+										<label>{{ text_status }}</label>
+										<select class="form-control" name="status">
+											{% if project %}
+												{% if project.status == 1 %}
+													<option value="1" selected="selected">{{ text_enabled }}</option>
+													<option value="0">{{ text_disabled }}</option>
+												{% elseif project.status == 0 %}
+													<option value="0" selected="selected">{{ text_disabled }}</option>
+													<option value="1">{{ text_enabled }}</option>
+												{% endif %}
+											{% else %}
+												<option value="1" selected="selected">{{ text_enabled }}</option>
+												<option value="0">{{ text_disabled }}</option>
+											{% endif %}
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div>
+								<ul class="nav nav-tabs">
+									<li class="active"><a class="btn btn-white selected" href="#tab-odnoklassniki"  data-toggle="tab"><i class="fa fa-odnoklassniki"></i> {{ text_ok }}</a></li>
+									<li><a class="btn btn-white" href="#tab-vkontakte"	data-toggle="tab"><i class="fa fa-vk"></i> 			{{ text_vk }}</a></li>
+									<li><a class="btn btn-white" href="#tab-telegram" 	data-toggle="tab"><i class="fa fa-send"></i> 		{{ text_tg }}</a></li>
+									<li><a class="btn btn-white" href="#tab-instagram" 	data-toggle="tab"><i class="fa fa-instagram"></i> 	{{ text_ig }}</a></li>
+									<li><a class="btn btn-white" href="#tab-facebook" 	data-toggle="tab"><i class="fa fa-facebook"></i> 	{{ text_fb }}</a></li>
+									<li><a class="btn btn-white" href="#tab-tumblr" 	data-toggle="tab"><i class="fa fa-tumblr"></i> 		{{ text_tb }}</a></li>
+									<li><a class="btn btn-white" href="#tab-twitter" 	data-toggle="tab"><i class="fa fa-twitter"></i> 	{{ text_tw }}</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active  col-sm-12" id="tab-odnoklassniki" >
+										{% if accounts.odnoklassniki %}
+										<div class="form-group">
+											<div class="js-alert-ok alert alert-danger hidden"></div>
+											<label>{{ text_account }} <i class="fa fa-odnoklassniki"></i></label>
+											<select class="form-control" name="ok_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.odnoklassniki %}
+													<option data-token="{{ account.ok_access_token }}" value="{{ account.account_id }}" {% if project.ok_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<label class="label-ok-groups"><i class="js-ok-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
+											<select class="form-control resp-ok-groups" name="ok_group_id"></select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="ok"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ok }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-telegram">
+										{% if accounts.telegram %}
+										<div class="form-group">
+											<div class="alert alert-info">{{ text_telegram_info }}</div>
+											<label>{{ text_account }} <i class="fa fa-send"></i></label>
+											<select class="form-control" name="tg_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.telegram %}
+													<option value="{{ account.account_id }}" {% if project.tg_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<label>{{ text_group_for_posting }}</label>
+											<input  id="telegram_chat_id" class="form-control"  placeholder="@channel_name" name="telegram_chat_id" value="{% if project.telegram_chat_id is defined %}{{ project.telegram_chat_id }}{% endif %}">
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="tg"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tg }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-vkontakte">
+
+										{% if accounts.vkontakte %}
+										<div class="form-group">
+											<div class="js-alert-vk alert alert-danger hidden"></div>
+											<label>{{ text_account }} <i class="fa fa-vk"></i></label>
+											<select class="form-control" name="vk_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.vkontakte %}
+													<option data-token="{{ account.vk_access_token }}" data-vk_user_id="{{ account.vk_user_id }}" value="{{ account.account_id }}" {% if project.vk_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<label class="label-vk-groups"><i class="js-vk-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
+											<select class="form-control resp-vk-groups" name="vk_group_id"></select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="vk"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_vk }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-instagram">
+										{% if accounts.instagram %}
+										<div class="form-group">
+											<label>{{ text_account }} <i class="fa fa-instagram"></i></label>
+											<select class="form-control" name="ig_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.instagram %}
+												<option value="{{ account.account_id }}" {% if project.ig_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="ig"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ig }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-facebook">
+										{% if accounts.facebook %}
+										<div class="form-group">
+											<div class="js-alert-fb alert alert-danger hidden"></div>
+											<label>{{ text_account }} <i class="fa fa-facebook"></i></label>
+											<select class="form-control" name="fb_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.facebook %}
+												<option
+														{% if project.fb_account_id %}
+															{% if project.fb_account_id  ==  account.account_id %}
+																selected
+															{% endif %}
+														{% endif %}
+														data-token="{{ account.fb_access_token }}"
+														data-fb_user_id="{{ account.fb_user_id }}"
+														value="{{ account.account_id }}">
+													{{ account.account_name }}
+												</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<label class="label-fb-groups"><i class="js-vk-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
+											<select class="form-control resp-fb-groups" name="fb_group_id"></select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="fb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_fb }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-tumblr">
+										{% if accounts.tumblr %}
+										<div class="form-group">
+											<label>{{ text_account }} <i class="fa fa-tumblr"></i></label>
+											<select class="form-control" name="tb_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.tumblr %}
+												<option value="{{ account.account_id }}" {% if project.tb_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="tb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tb }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-twitter">
+										{% if accounts.twitter %}
+										<div class="form-group">
+											<label>{{ text_account }} <i class="fa fa-twitter"></i></label>
+											<select class="form-control" name="tw_account_id">
+												<option value="0">{{ text_select_account }}</option>
+												{% for account in accounts.twitter %}
+												<option value="{{ account.account_id }}"{% if project.tw_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										<div class="form-group">
+											<a class="badge bg-light js-trash" data-social="tw"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+										</div>
+										{% else %}
+										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tw }}</div>
+										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- /content -->
+
+
+<script type="text/javascript">
+	$('.js-trash').on('click',(function(e) {
+		let social = $(this).attr('data-social');
+		switch (social) {
+			case 'ok':
+				$("select[name=\'ok_account_id\'] option[value=\'0\']").prop('selected', true);
+				$('.resp-ok-groups').html('');
+				$('.js-alert-ok').addClass('hidden');
+				break;
+			case 'vk':
+				$("select[name=\'vk_account_id\'] option[value=\'0\']").prop('selected', true);
+				$('.resp-vk-groups').html('');
+				break;
+			case 'tg':
+				$("select[name=\'tg_account_id\'] option[value=\'0\']").prop('selected', true);
+				$("input[name=\'telegram_chat_id\'").val('');
+				break;
+			case 'ig':
+				$("select[name=\'ig_account_id\'] option[value=\'0\']").prop('selected', true);
+				break;
+			case 'fb':
+				$("select[name=\'fb_account_id\'] option[value=\'0\']").prop('selected', true);
+				$('.resp-fb-groups').html('');
+				break;
+			case 'tb':
+				$("select[name=\'tb_account_id\'] option[value=\'0\']").prop('selected', true);
+				break;
+			case 'tw':
+				$("select[name=\'tw_account_id\'] option[value=\'0\']").prop('selected', true);
+				break;
+		}
+	}));
+
+	/*
+	|--------------------------------------------------------------------------
+	| Get Groups Odnoklassniki
+	|--------------------------------------------------------------------------
+	|
+	*/
+	function getOkGroups() {
+
+		let ok_selected = $("select[name=\'ok_account_id\'] :selected");
+
+		let ok_account_id = ok_selected.val();
+		let ok_access_token = ok_selected.attr('data-token');
+		let group_id = '{{project.ok_group_id }}';
+
+		if (ok_account_id != '0') {
+			$.ajax({
+				url: '{{ group_links.ok_groups }}',
+				type: 'post',
+				data: { access_token : ok_access_token, group_id : group_id},
+				dataType: 'json',
+				success: function(json) {
+
+					if (json['options']) {
+						$('.label-ok-groups').removeClass('hidden');
+						$('.js-ok-group-loader').addClass('hidden');
+						$('.resp-ok-groups').html(json['options']);
+					}
+
+					if (json['error'] && json['error'] != 'N') {
+						$('.js-ok-group-loader').addClass('hidden');
+						$('.js-alert-ok').removeClass('hidden');
+						$('.js-alert-ok').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
+					}
+
+				}
+			});
+		} else {
+			$('.js-ok-group-loader').addClass('hidden');
+			$('.resp-ok-groups').html('');
+			$('.js-alert-ok').addClass('hidden');
+		}
+
+	}
+
+	$('select[name=\'ok_account_id\']').on('change',(function(e) {
+		$('.js-ok-group-loader').removeClass('hidden');
+		getOkGroups();
+	}));
+
+
+	{% if project.ok_group_id %}
+	$( document ).ready(function() {
+		$('.js-ok-group-loader').removeClass('hidden');
+		getOkGroups();
+	});
+	{% endif %}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Get Groups Vkontakte
+	|--------------------------------------------------------------------------
+	|
+	*/
+
+	function getVkGroups() {
+		let vk_selected = $("select[name=\'vk_account_id\'] :selected");
+
+		let vk_account_id = vk_selected.val(),
+				access_token = vk_selected.attr('data-token'),
+				vk_user_id = vk_selected.attr('data-vk_user_id'),
+				group_id = "{{project.vk_group_id }}";
+
+		if (vk_account_id != '0') {
+			$.ajax({
+				url: '{{ group_links.vk_groups }}',
+				type: 'post',
+				data: { vk_account_id : vk_account_id, group_id : group_id, access_token : access_token, vk_user_id : vk_user_id},
+				dataType: 'json',
+				success: function(json) {
+
+					if (json['options']) {
+						$('.label-vk-groups').removeClass('hidden');
+						$('.js-vk-group-loader').addClass('hidden');
+						$('.resp-vk-groups').html(json['options']);
+					}
+
+					if (json['error']) {
+						$('.js-vk-group-loader').addClass('hidden');
+						$('.js-alert-vk').removeClass('hidden');
+						$('.js-alert-vk').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
+					}
+
+				}
+			});
+		} else {
+			$('.js-vk-group-loader').addClass('hidden');
+			$('.resp-vk-groups').html('');
+			$('.js-alert-vk').addClass('hidden')
+		}
+	}
+
+	$('select[name=\'vk_account_id\']').on('change',(function(e) {
+		$('.js-vk-group-loader').removeClass('hidden');
+		getVkGroups();
+	}));
+
+
+	{% if project.vk_group_id %}
+	$( document ).ready(function() {
+		$('.js-vk-group-loader').removeClass('hidden');
+		getVkGroups();
+	});
+	{% endif %}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Get Groups Facebook
+	|--------------------------------------------------------------------------
+	|
+	*/
+
+	function getFbGroups() {
+		let fb_selected = $("select[name=\'fb_account_id\'] :selected");
+
+		let fb_account_id = fb_selected.val(),
+				access_token = fb_selected.attr('data-token'),
+				fb_user_id = fb_selected.attr('data-fb_user_id'),
+				group_id = "{{project.fb_group_id }}";
+
+		if (fb_account_id != '0') {
+			$.ajax({
+				url: '{{ group_links.fb_groups }}',
+				type: 'post',
+				data: { fb_account_id : fb_account_id, group_id : group_id, access_token : access_token, fb_user_id : fb_user_id},
+				dataType: 'json',
+				success: function(json) {
+
+					if (json['options']) {
+						$('.label-fb-groups').removeClass('hidden');
+						$('.js-fb-group-loader').addClass('hidden');
+						$('.resp-fb-groups').html(json['options']);
+					}
+
+					if (json['error']) {
+						$('.js-fb-group-loader').addClass('hidden');
+						$('.js-alert-fb').removeClass('hidden');
+						$('.js-alert-fb').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
+					}
+
+				}
+			});
+		} else {
+			$('.js-fb-group-loader').addClass('hidden');
+			$('.resp-fb-groups').html('');
+			$('.js-alert-fb').addClass('hidden')
+		}
+	}
+
+	$('select[name=\'fb_account_id\']').on('change',(function(e) {
+		$('.js-fb-group-loader').removeClass('hidden');
+		getFbGroups();
+	}));
+
+
+	{% if project.fb_group_id %}
+	$( document ).ready(function() {
+		$('.js-fb-group-loader').removeClass('hidden');
+		getFbGroups();
+	});
+	{% endif %}
+
+
+
+</script>
+
+{{ footer }}
+
+

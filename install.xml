@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>SMM-posting</name>
+    <version>2.0</version>
+    <author>https://smm-posting.ru/</author>
+    <code>smmposting</code>
+
+
+    <!-- install for opencart 2.0 -->
+    <file path="admin/controller/common/menu.php">
+        <operation>
+            <search trim="true">
+                <![CDATA[$data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');]]>
+            </search>
+            <add position="before"><![CDATA[
+                # smmposting modification begin
+                $this->load->language('marketing/smmposting');
+				$data['smmposting'] = $this->url->link('marketing/smmposting', 'token=' . $this->session->data['token'], 'SSL');
+                # smmposting modification end
+		]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/common/menu.tpl">
+        <operation>
+            <search trim="true">
+                <![CDATA[<li><a href="<?php echo $marketing; ?>"><?php echo $text_marketing; ?></a></li>]]>
+            </search>
+            <add position="before"><![CDATA[
+                <!-- smmposting modification begin -->
+                <li><a href="<?php echo $smmposting; ?>">SMM-posting</a></li>
+                <!-- smmposting modification end -->
+        ]]></add>
+        </operation>
+    </file>
+
+    <!-- install for opencart 2.3 - 3.0 -->
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search trim="true">
+                <![CDATA[if ($this->user->hasPermission('access', 'marketing/marketing')) {]]>
+            </search>
+            <add position="before"><![CDATA[
+                # smmposting modification begin
+
+                $this->load->language('marketing/smmposting');
+
+                if (version_compare(VERSION, '3.0.0') >= 0) {
+                    $token = 'user_token=' . $this->session->data['user_token'];
+                } else {
+                    $token = 'token=' . $this->session->data['token'];
+                }
+
+                if ($this->user->hasPermission('access', 'marketing/smmposting')) {
+
+                    $smmposting = array();
+
+                    $smmposting[] = array(
+                        'name'     => $this->language->get('text_posts'),
+                        'href'     => $this->url->link('marketing/smmposting/posts', $token, true),
+                        'children' => array()
+                    );
+
+                    $smmposting[] = array(
+                        'name'     => $this->language->get('text_products'),
+                        'href'     => $this->url->link('marketing/smmposting/products', $token, true),
+                        'children' => array()
+                    );
+
+                    $smmposting[] = array(
+                        'name'     => $this->language->get('text_projects'),
+                        'href'     => $this->url->link('marketing/smmposting/projects', $token, true),
+                        'children' => array()
+                    );
+
+                    $smmposting[] = array(
+                        'name'     => $this->language->get('text_accounts'),
+                        'href'     => $this->url->link('marketing/smmposting/accounts', $token, true),
+                        'children' => array()
+                    );
+
+                    $smmposting[] = array(
+                        'name'     => $this->language->get('text_settings'),
+                        'href'     => $this->url->link('marketing/smmposting/settings', $token, true),
+                        'children' => array()
+                    );
+
+                    $marketing[] = array(
+                        'name'     => 'SMM-posting',
+                        'href'     => '',
+                        'children' => $smmposting,
+                    );
+                }
+
+
+
+                # smmposting modification end
+        ]]></add>
+        </operation>
+    </file>
+
+
+    <!-- install Emoji Smiles -->
+
+    <file path="system/library/db/mysqli.php">
+        <operation>
+            <search trim="true">
+                <![CDATA[$this->connection->set_charset("utf8");]]>
+            </search>
+            <add position="replace"><![CDATA[
+                # smmposting modification begin
+                $this->connection->set_charset("utf8mb4");
+                $this->connection->query("SET NAMES 'utf8mb4'");
+                $this->connection->query("SET CHARACTER_SET_CONNECTION=utf8mb4");
+                # smmposting modification end
+        ]]></add>
+        </operation>
+    </file>
+
+
+</modification>

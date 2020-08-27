@@ -106,7 +106,7 @@ Class ControllerMarketingSmmposting extends Controller {
      * @param string       $data['posts'][$key]['fb_access_token'] - Facebook access_token
      * @param string       $data['posts'][$key]['fb_user_id'] - Facebook user_id
      * @param string       $data['posts'][$key]['tw_oauth_token'] - Twitter oauth_token
-     * @param string       $data['posts'][$key]['tw_oauth_verifier'] - Twitter oauth_verifier
+     * @param string       $data['posts'][$key]['tw_oauth_token_secret'] - Twitter oauth_verifier
      * @param string       $data['posts'][$key]['tb_oauth_verifier'] - Tumblr oauth_verifier
      * @param string       $data['posts'][$key]['tb_oauth_token_secret'] - Tumblr oauth_token_secret
 

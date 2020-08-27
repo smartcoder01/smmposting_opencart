@@ -357,26 +357,32 @@ class ControllerMarketingSmmposting extends Controller {
         |--------------------------------------------------------------------------
         |
         */
+		/*
+        |--------------------------------------------------------------------------
+        | Connecting Twitter
+        |--------------------------------------------------------------------------
+        |
+        */
 		if (isset($_GET['tw_auth'])) {
 			$oauth_token = $_GET['oauth_token'];
 			$oauth_verifier = $_GET['oauth_verifier'];
-			#Response from SMM-posting
+			$oauth_token_secret = $_GET['oauth_token_secret'];
+			//#Ответ сервера SMM-posting
 			$this->smmposting = new Smmposting($this->getApiToken());
 			$response = $this->smmposting->tw_info($oauth_token,$oauth_verifier);
-
 			if (isset($response->error)) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_9'). $response->error;
 			} else {
 				if (isset($response->screen_name)) {
 					$name = $response->screen_name;
 					$this->load->model('marketing/smmposting');
-					$this->model_marketing_smmposting->save_tw($name, $oauth_token, $oauth_verifier);
+					$this->model_marketing_smmposting->save_tw($name, $oauth_token, $oauth_token_secret);
 				} else {
 					$this->session->data['error_warning'] = $this->language->get('smmposting_error_10');
 				}
 			}
-
 		}
+
 
 		/*
         |--------------------------------------------------------------------------

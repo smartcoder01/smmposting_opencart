@@ -1,0 +1,174 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      {{ smm_menu }}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title" id="js-title"><i class="fa fa-pencil"></i>SMM-posting module - {{ version }}</h3>
+      </div>
+      <div class="panel-body">
+
+
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+
+          <ul class="nav nav-tabs">
+            <li id="href-general" class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+            <li id="href-cron"><a href="#tab-cron" data-toggle="tab">Планировщик</a></li>
+            <li id="href-products"><a href="#tab-products" data-toggle="tab">Товары</a></li>
+            <li id="href-license"><a href="#tab-license" data-toggle="tab">Обновления <span id="sticker" class="label label-warning"></span></a></li>
+          </ul>
+
+          <div class="tab-content">
+            
+
+            <div class="tab-pane active" id="tab-general">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-name">{{ text_domain }}</label>
+                <div class="col-sm-10">
+                  <input type="text" value="{{ domain }}" id="input-domain" class="form-control" readonly>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-description">{{ text_api_token }}</label>
+                <div class="col-sm-10">
+                  <input type="text" value="{% if api_token is defined %}{{ api_token }}{% endif %}" name="config[api_token]" id="input-api_token" class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab-cron">
+              <div class="alert alert-info"><i class="fa fa-info-circle"></i>     <button type="button" class="close" data-dismiss="alert">×</button>
+                <b>{{ text_cron_title }}</b> <br> {{ text_cron_comand }}
+              </div>
+
+
+
+              <input type="text" id="text" value='wget -U firefox -r -np -q "{{ cron_link }}"' class="form-control" />
+              <br><a class="btn btn-primary" id="copy">Скопировать</a>
+            </div>
+
+
+            <div class="tab-pane" id="tab-products">
+
+
+              <div class="alert alert-info"><i class="fa fa-info-circle"></i>     <button type="button" class="close" data-dismiss="alert">×</button>
+                <b>{{ text_product_settings }}</b> <br>
+                {{ text_product_settings_info }}
+              </div>
+
+
+              <textarea style="height: 250px;" name="config[product_template]" class="form-control">{% if config.product_template is defined %}{{ config.product_template }}{% endif %}</textarea>
+
+
+              <br><br>
+
+              <div class="panel-heading">
+                <h3 class="panel-title" id="js-title"><i class="fa fa-list"></i>Список тегов</h3>
+              </div>
+              <table class="table table-bordered">
+                <tbody>
+                <tr>
+                  <td>{price}</td>
+                  <td>Цена</td>
+                </tr>
+                <tr>
+                  <td>{name}</td>
+                  <td>Название товара</td>
+                </tr>
+                <tr>
+                  <td>{model}</td>
+                  <td>Модель</td>
+                </tr>
+                <tr>
+                  <td>{sku}</td>
+                  <td>SKU</td>
+                </tr>
+                <tr>
+                  <td>{description}</td>
+                  <td>описание</td>
+                </tr>
+
+                <tr>
+                  <td>{link}</td>
+                  <td>Ссылка на товар</td>
+                </tr>
+                </tbody>
+              </table>
+
+
+            </div>
+
+            <div class="tab-pane" id="tab-license">
+
+              <div>
+                 <h4><i class="fa fa-send"></i> SMM-posting - отложенная публикация в социальные сети </h4>
+                 Пишите нам по любому вопросу. Идеи, предложения пожелания так же принимаются.😉<br>
+                 <br>
+                 <a target="_blank" href="https://smm-posting.ru"><i class="fa fa-share-square-o"></i> https://smm-posting.ru</a> <br>
+                 <i class="fa fa-envelope-o" aria-hidden="true"></i>  support@smm-posting.ru<br>
+                 <hr>
+                 <h4>Подписывайтесь!</h4>
+                 Новости и обновления, интересные статьи по продвижению в социальных сетях.
+
+                 <br><br>
+
+                  <a href="https://vk.com/smm_posting_ru" class="btn btn-vk"><i class="fa fa-vk"></i> <span class="hidden-xs">Вконтакте</span></a>
+                  <a href="https://t.me/smm_posting" class="btn btn-info"><i class="fa fa-send"></i> <span class="hidden-xs">Телеграм</span></a>
+                  <a href="https://www.instagram.com/smmposting/" class="btn btn-instagram"><i class="fa fa-instagram"></i> <span class="hidden-xs">Инстаграм</span></a>
+                  <a href="https://ok.ru/group/56305777508594" class="btn btn-warning"><i class="fa fa-odnoklassniki"></i> <span class="hidden-xs">Одноклассники</span></a>
+
+                  <br>
+
+              </div>
+            </div>
+
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+  $('#copy').click(function() {
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($('#text').val()).select();
+      document.execCommand("copy");
+      $temp.remove();
+
+      
+      $(this).removeClass('btn-primary');
+      $(this).addClass('btn-success');
+      $(this).text('Команда скопирована!');
+  });
+</script>
+
+  <script type="text/javascript" src="view/javascript/ckeditor_smm/ckeditor.js"></script>
+  <script type="text/javascript"><!--
+    CKEDITOR.addCss('.cke_editable p { margin: 0 !important; }');
+    CKEDITOR.replace('config[product_template]', {
+      toolbar : 'Full',
+    });
+    //--></script>
+
+</div>
+{{ footer }}

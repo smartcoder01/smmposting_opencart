@@ -1,6 +1,5 @@
 {{ header }}
 {{ column_left }}
-
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
@@ -31,13 +30,13 @@
             {{ text_welcome_instruction_4 }} <br>
 
             <div class="mt-2">
-                {% if error_warning is defined %}
+                {% if (error_warning) %}
                     <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                     </div>
                 {% endif %}
 
-                {% if success %}
+                {% if (success) %}
                     <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                     </div>

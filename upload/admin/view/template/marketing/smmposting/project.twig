@@ -76,7 +76,7 @@
 											<label>{{ text_account }} <i class="fa fa-odnoklassniki"></i></label>
 											<select class="form-control" name="ok_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.odnoklassniki %}
+												{% for account in accounts %}
 													<option data-token="{{ account.ok_access_token }}" value="{{ account.account_id }}" {% if project.ok_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>
@@ -100,14 +100,14 @@
 											<label>{{ text_account }} <i class="fa fa-send"></i></label>
 											<select class="form-control" name="tg_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.telegram %}
+												{% for account in accounts %}
 													<option value="{{ account.account_id }}" {% if project.tg_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>
 										</div>
 										<div class="form-group">
 											<label>{{ text_group_for_posting }}</label>
-											<input  id="telegram_chat_id" class="form-control"  placeholder="@channel_name" name="telegram_chat_id" value="{% if project.telegram_chat_id is defined %}{{ project.telegram_chat_id }}{% endif %}">
+											<input  id="telegram_chat_id" class="form-control"  placeholder="@channel_name" name="telegram_chat_id" value="<? echo (isset($project['telegram_chat_id']) ? $project['telegram_chat_id'] : ''); ">
 										</div>
 										<div class="form-group">
 											<a class="badge bg-light js-trash" data-social="tg"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
@@ -125,7 +125,7 @@
 											<label>{{ text_account }} <i class="fa fa-vk"></i></label>
 											<select class="form-control" name="vk_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.vkontakte %}
+												{% for account in accounts %}
 													<option data-token="{{ account.vk_access_token }}" data-vk_user_id="{{ account.vk_user_id }}" value="{{ account.account_id }}" {% if project.vk_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>
@@ -149,7 +149,7 @@
 											<label>{{ text_account }} <i class="fa fa-instagram"></i></label>
 											<select class="form-control" name="ig_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.instagram %}
+												{% for account in accounts %}
 												<option value="{{ account.account_id }}" {% if project.ig_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>
@@ -169,7 +169,7 @@
 											<label>{{ text_account }} <i class="fa fa-facebook"></i></label>
 											<select class="form-control" name="fb_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.facebook %}
+												{% for account in accounts %}
 												<option
 														{% if project.fb_account_id %}
 															{% if project.fb_account_id  ==  account.account_id %}
@@ -202,7 +202,7 @@
 											<label>{{ text_account }} <i class="fa fa-tumblr"></i></label>
 											<select class="form-control" name="tb_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.tumblr %}
+												{% for account in accounts %}
 												<option value="{{ account.account_id }}" {% if project.tb_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>
@@ -221,7 +221,7 @@
 											<label>{{ text_account }} <i class="fa fa-twitter"></i></label>
 											<select class="form-control" name="tw_account_id">
 												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts.twitter %}
+												{% for account in accounts %}
 												<option value="{{ account.account_id }}"{% if project.tw_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
 												{% endfor %}
 											</select>

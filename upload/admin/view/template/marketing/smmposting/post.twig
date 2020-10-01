@@ -84,7 +84,7 @@
                                                     data-ig="{{ project.ig_account_id }}"
                                                     data-fb="{{ project.fb_account_id }}"
                                                     data-tb="{{ project.tb_account_id }}"
-                                                    data-tw="{{ project.tw_account_id }}"
+                                                    data-tw="{{ project.tb_account_id }}"
                                                     value="{{ project.project_id }}"
                                                     {% if post.project_id is defined %} {% if project.project_id  ==  post.project_id %}
                                                     selected
@@ -321,17 +321,17 @@ document.getElementById('time_input').value = time_3;
                 let tb = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-tb');
                 let tw = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-tw');
 
-                let show_accounts = 0
+                if (ok != 0) { $("input[name=\'smmposting_post[odnoklassniki]\']").prop('checked', true); $('.fg-ok').fadeIn(); }
+                if (vk != 0) { $("input[name=\'smmposting_post[vkontakte]\']").prop('checked', true); $('.fg-vk').fadeIn(); }
+                if (tg != 0) { $("input[name=\'smmposting_post[telegram]\']").prop('checked', true); $('.fg-tg').fadeIn(); }
+                if (ig != 0) { $("input[name=\'smmposting_post[instagram]']").prop('checked', true); $('.fg-ig').fadeIn(); }
+                if (fb != 0) { $("input[name=\'smmposting_post[facebook]']").prop('checked', true); $('.fg-fb').fadeIn(); }
+                if (tb != 0) { $("input[name=\'smmposting_post[tumblr]']").prop('checked', true); $('.fg-tb').fadeIn(); }
+                if (tw != 0) { $("input[name=\'smmposting_post[twitter]']").prop('checked', true); $('.fg-tw').fadeIn(); }
 
-                if (ok != 0) { show_accounts = 1; $("input[name=\'smmposting_post[odnoklassniki]\']").prop('checked', true); $('.fg-ok').fadeIn(); }
-                if (vk != 0) { show_accounts = 1; $("input[name=\'smmposting_post[vkontakte]\']").prop('checked', true); $('.fg-vk').fadeIn(); }
-                if (tg != 0) { show_accounts = 1; $("input[name=\'smmposting_post[telegram]\']").prop('checked', true); $('.fg-tg').fadeIn(); }
-                if (ig != 0) { show_accounts = 1; $("input[name=\'smmposting_post[instagram]']").prop('checked', true); $('.fg-ig').fadeIn(); }
-                if (fb != 0) { show_accounts = 1; $("input[name=\'smmposting_post[facebook]']").prop('checked', true); $('.fg-fb').fadeIn(); }
-                if (tb != 0) { show_accounts = 1; $("input[name=\'smmposting_post[tumblr]']").prop('checked', true); $('.fg-tb').fadeIn(); }
-                if (tw != 0) { show_accounts = 1; $("input[name=\'smmposting_post[twitter]']").prop('checked', true); $('.fg-tw').fadeIn(); }
+                let sum = vk + ok + tg + ig + fb + tb + tw;
 
-                if (show_accounts === '0') {
+                if (sum == 0) {
                     Swal.fire({
                         title: "{{ text_attention }}",
                         text:  "{{ text_no_accounts_in_project }}",

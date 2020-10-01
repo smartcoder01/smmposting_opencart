@@ -1,236 +1,280 @@
 {{ header }}
 {{ column_left }}
 <div id="content">
-    <div class="page-header">
-        <div class="container-fluid">
-            {{ smm_menu }}
-        </div>
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a class="btn btn-success btn-md waves-effect waves-light m-b-30" href="{{ add_project }}" class="button"><i class="fa fa-plus"></i><span class="hidden-xs"> Добавить проект</span></a>
+      </div>
+        {{ smm_menu }}
+      </ul>
     </div>
+  </div>
+  <div class="container-fluid">{% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
 
-    <div class="smmposting-container">
-        {% if error_warning %}
-            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endif %}
-        {% if success %}
-            <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endif %}
 
-        <div class="card">
-            <div class="card-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab-posts">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab-odnoklassniki" data-toggle="tab"><i class="fa fa-odnoklassniki"></i> {{ text_ok }}</a></li>
-                            <li><a href="#tab-vkontakte" data-toggle="tab"><i class="fa fa-vk"></i> {{ text_vk }}</a></li>
-                            <li><a href="#tab-telegram" data-toggle="tab"><i class="fa fa-send"></i> {{ text_tg }}</a></li>
-                            <li><a href="#tab-instagram" data-toggle="tab"><i class="fa fa-instagram"></i> {{ text_ig }}</a></li>
-                            <li><a href="#tab-facebook" data-toggle="tab"><i class="fa fa-facebook"></i> {{ text_fb }}</a></li>
-                            <li><a href="#tab-tumblr" data-toggle="tab"><i class="fa fa-tumblr"></i> {{ text_tb }}</a></li>
-                            <li><a href="#tab-twitter" data-toggle="tab"><i class="fa fa-twitter"></i> {{ text_tw }}</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tab-odnoklassniki">
-                                <div class="alert alert-info">
-                                    {{ text_info_group }}
-                                </div>
-                                <form action="{{ auth_links.ok_auth_link }}" method="post" id="auth_ok">
-                                    <input type="hidden" name="server_link" value="{{ server_link }}">
-                                    <div class="panel-footer">
-                                        <button class="btn btn-warning" type="submit"><i class="fa fa-odnoklassniki"></i> {{ button_add_odnoklassniki }}</button>
-                                    </div>
-                                </form>
-                            </div>
 
-                            <div class="tab-pane" id="tab-vkontakte">
-                                <div class="alert alert-info">
-                                    {{ text_info_group }}
-                                </div>
-                                <form action="{{ auth_links.vk_auth_link }}" method="post" id="auth_ok">
-                                    <input type="hidden" name="server_link" value="{{ server_link }}">
-                                    <div class="panel-footer">
-                                        <button class="btn btn-vk" type="submit"><i class="fa fa-vk"></i> {{ button_add_vkontakte }}</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="tab-pane" id="tab-telegram">
-                                <div class="alert alert-info">
-                                    {{ text_info_telegram }}
-                                </div>
-
-                                <form action="{{ action_add_telegram }}" method="post" enctype="multipart/form-data" id="addTelegram">
-                                    <div>
-                                        <label>{{ text_token }}</label>
-                                        <input name="telegram_token" class="form-control"  placeholder="640585380:AAFcqbSSJq0Rs-HsCj4sClmUsPqOFeOZFwE" value=""><br>
-                                    </div>
-
-                                    <div class="panel-footer">
-                                        <a onclick="$('#addTelegram').submit();" class="btn btn-info waves-effect waves-light"> <span class="btn-label"><i class="fa fa-send"></i></span> {{ button_add_telegram }}</a>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <div class="tab-pane" id="tab-instagram">
-
-                                <form action="{{ action_add_instagram }}" method="post" enctype="multipart/form-data" id="addInstagram">
-                                    <div>
-                                        <label>{{ text_login }}</label>
-                                        <input class="form-control"  name="instagram_login" value=""><br>
-                                    </div>
-
-                                    <div>
-                                        <label>{{ text_password }}</label>
-                                        <input readonly onfocus="this.removeAttribute('readonly')" type="password" class="form-control"  name="instagram_password"><br>
-                                    </div>
-
-                                    <div class="panel-footer">
-                                        <a onclick="$('#addInstagram').submit();" class="btn btn-instagram waves-effect waves-light"> <span class="btn-label"><i class="fa fa-instagram"></i></span> {{ button_add_instagram }}</a>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <div class="tab-pane" id="tab-facebook">
-                                <div class="alert alert-info">
-                                    {{ text_info_group }}
-                                </div>
-                                <form action="{{ auth_links.fb_auth_link }}" method="post" id="auth_ok">
-                                    <input type="hidden" name="server_link" value="{{ server_link }}">
-                                    <div class="panel-footer">
-                                        <button class="btn btn-facebook" type="submit"><i class="fa fa-facebook"></i> {{ button_add_facebook }}</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="tab-pane" id="tab-tumblr">
-                                <div class="alert alert-info">
-                                    {{ text_info_group }}
-                                </div>
-                                <form action="{{ auth_links.tb_auth_link }}" method="post" id="auth_ok">
-                                    <input type="hidden" name="server_link" value="{{ server_link }}">
-                                    <div class="panel-footer">
-                                        <button class="btn btn-tumblr" type="submit"><i class="fa fa-tumblr"></i> {{ button_add_tumblr }}</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="tab-pane" id="tab-twitter">
-                                <div class="alert alert-info">
-                                    {{ text_info_group }}
-                                </div>
-                                <form action="{{ auth_links.tw_auth_link }}" method="post" id="auth_ok">
-                                    <input type="hidden" name="server_link" value="{{ server_link }}">
-                                    <div class="panel-footer">
-                                        <button class="btn btn-twitter" type="submit"><i class="fa fa-twitter"></i> {{ button_add_twitter }}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title" id="js-title"><i class="fa fa-users"></i>{{ text_accounts }}</h3>
-            </div>
-            <div class="tab-content">
-                <div class="tab-pane active" id="tab-posts">
-                    <table class="table table-striped mb-0">
-                        <tbody>
-                        {% if accounts %}
-                            {% for account in accounts %}
-                        <tr>
-                            <td class="js-check-account acc-td" data-account_id="{{ account.account_id }}">
 
-                                {% if account.social  ==  'odnoklassniki' %}
-                                <span class="social btn btn-warning"><i class="fa fa-odnoklassniki"></i></span>
-                                {% elseif account.social ==  'vkontakte' %}
-                                    <span class="social btn btn-vk"><i class="fa fa-vk"></i></span>
-                                {% elseif account.social ==  'telegram' %}
-                                    <span class="social btn btn-info"><i class="fa fa-send"></i></span>
-                                {% elseif account.social ==  'instagram' %}
-                                    <span class="social btn btn-instagram"><i class="fa fa-instagram"></i></span>
-                                {% elseif account.social ==  'facebook' %}
-                                    <span class="social btn btn-facebook"><i class="fa fa-facebook"></i></span>
-                                {% elseif account.social ==  'tumblr' %}
-                                    <span class="social btn btn-tumblr"><i class="fa fa-tumblr"></i></span>
-                                {% elseif account.social ==  'twitter' %}
-                                    <span class="social btn btn-twitter"><i class="fa fa-twitter"></i></span>
-                                {% endif %}
-                                <span class="js-name">{{ account.account_name }}</span><br>
-                                <span class="js-loader text-muted"></span>
-                            </td>
-                            <td>
-                                {% if account.status  ==  1 %}
-                                    <span class="js-title-1 label label-success small">{{ text_connected }}</span>
-                                    <br>
-                                 {% else %}
-                                    <span class="js-title-1 label label-danger small">{{ text_disconnected }}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a class="btn btn-danger js-delete" data-account_id="{{ account.account_id }}" data-name="{{ account.account_name }}"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                            {% endfor %}
-                        {% else %}
-                        <div class="text-center pt-4 mb-4">{{ text_no_accounts }}</div>
-                        {% endif %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="panel-body">
+               <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab-odnoklassniki" data-toggle="tab">Одноклассники</a></li>
+                <li><a href="#tab-vkontakte" data-toggle="tab">Вконтакте</a></li>
+                <li><a href="#tab-telegram" data-toggle="tab">Телеграм</a></li>
+{#                <li><a href="#tab-instagram" data-toggle="tab">Инстаграм</a></li>#}
+              </ul>
+              <div class="table-responsive">
+                <div class="tab-content">
+                    
+                    <div class="tab-pane active" id="tab-odnoklassniki">
+                        <div class="alert alert-info">
+                        {{ text_info_group }}
+                        </div>
+                        <form action="https://smm-posting.ru/api/v1/accounts/ok/auth" method="post" id="auth_ok">
+                            <input type="hidden" name="server_link" value="{{ server_link }}&s=odnoklassniki">
+                            <input type="hidden" name="user_token" value="{{ token }}">
+                            <button class="btn btn-warning" type="submit"><i class="fa fa-odnoklassniki"></i> <span class="hidden-xs">{{ button_add_odnoklassniki }}</span></button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane" id="tab-vkontakte">
+                        <div class="alert alert-info">
+                        {{ text_info_group }}
+                        </div>
+                        <form action="https://smm-posting.ru/api/v1/accounts/vk/auth" method="post" id="auth_ok">
+                            <input type="hidden" name="server_link" value="{{ server_link }}&s=vkontakte">
+                            <input type="hidden" name="user_token" value="{{ token }}">
+                            <button class="btn btn-vk" type="submit"><i class="fa fa-vk"></i> <span class="hidden-xs">{{ button_add_vkontakte }}</span></button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane" id="tab-telegram">
+                      <div class="alert alert-info">
+                        {{ text_info_telegram }}
+                      </div>
+
+                      <form action="{{ action_add_telegram }}" method="post" enctype="multipart/form-data" id="addTelegram">  
+                        <div>
+                          <label>Токен доступа</label>
+                          <input name="telegram_token" class="form-control"  placeholder="640585380:AAFcqbSSJq0Rs-HsCj4sClmUsPqOFeOZFwE" value=""><br>
+                        </div>
+
+                        <div class="panel-footer">
+                          <a onclick="$('#addTelegram').submit();" class="btn btn-info waves-effect waves-light"> <span class="btn-label"><i class="fa fa-send"></i></span> {{ button_add_telegram }}</a>
+                        </div>
+
+                      </form>
+                    </div>
+
+                    <div class="tab-pane" id="tab-instagram">
+
+                      <form action="{{ action_add_instagram }}" method="post" enctype="multipart/form-data" id="addInstagram">  
+                        <div>
+                          <label>Логин:</label>
+                          <input class="form-control"  name="instagram_login" value=""><br>
+                        </div>
+
+                        <div>
+                          <label>Пароль:</label>
+                          <input readonly onfocus="this.removeAttribute('readonly')" type="password" class="form-control"  name="instagram_password" value=""><br>
+                        </div>  
+
+                        <div class="panel-footer">
+                          <a onclick="$('#addInstagram').submit();" class="btn btn-instagram waves-effect waves-light"> <span class="btn-label"><i class="fa fa-instagram"></i></span> Добавить аккаунт Инстаграм</a>
+                        </div>
+
+                      </form>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+           
+
+
+            <div class="row">
+              <div class="col-sm-6 text-left">{{ pagination }}</div>
+              <div class="col-sm-6 text-right">{{ results }}</div>
+            </div>
             </div>
         </div>
+      </div>
+
+
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-users"></i> {{ text_accounts }}</h3>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-responsive">
+                <div class="tab-content">
+                  <table class="table table-striped b-t b-light">
+                    <tbody>
+                      {% if accounts is defined %}
+                        {% for account in accounts %}
+                        <tr>
+                          <td class="js-check-account" data-account_id="{{ account.account_id }}">
+
+
+
+                          {% if account.social == 'odnoklassniki' %}
+                            <span class="social btn btn-warning"><i class="fa fa-odnoklassniki"></i></span>
+                          {% elseif account.social == 'vkontakte' %}
+                            <span class="social btn btn-vk"><i class="fa fa-vk"></i></span>
+                          {% elseif account.social == 'telegram' %}
+                            <span class="social btn btn-info"><i class="fa fa-send"></i></span>
+                          {% elseif account.social == 'instagram' %}
+                            <span class="social btn btn-instagram"><i class="fa fa-instagram"></i></span>
+                          {% endif %}
+
+                        <span class="js-name">{{ account.account_name }}</span><br>
+                        <span class="js-loader text-muted"></span>
+                        
+                        {% if account.status == 1 %}
+                          <span class="js-title-1 label label-success small">Подключен</span>
+                          <br>
+                        {% else %}
+                          <span class="js-title-1 label label-danger small">Не подключен</span>
+
+                          {% if account.error is defined %}
+                          <br><span class="small js-title-2">{{ account.error }}</span>
+                          {% else %}
+                          <br>
+                          <span class="small js-title-2">Попробуйте подключить аккаунт заново</span>
+                          {% endif %}
+
+                        {% endif %}
+
+                        </td>
+                          <td>
+                            <a class="btn btn-danger js-delete" data-account_id="{{ account.account_id }}" data-name="{{ account.account_name }}"><i class="fa fa-trash"></i></a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <div class="text-center">Нет аккаунтов</div>
+                    {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 text-left">{{ pagination }}</div>
+              <div class="col-sm-6 text-right">{{ results }}</div>
+            </div>
+            </div>
+        </div>
+      </div>
     </div>
+    </div>
+  </div>
+  
+<script type="text/javascript">
+function checkAccount(account_id,elem) {
 
+   elem.children('.js-loader').html('<i class="fa fa-refresh fa-spin"></i>');
+   $.ajax({
+        url: 'index.php?route=marketing/smmposting/checkAccount&user_token={{ token }}',
+        type: 'post',
+        data: {account_id},
+        dataType: 'json',
+        success: function(json) {
 
-    <!-- Page JS Code -->
-    <script type="text/javascript">
-        $(document).on('click', '.js-delete', function (e) {
-            var name = $(this).data('name');
+          if (json['error']) {
+          }  
 
-            Swal.fire({
-                title: "{{ text_delete_question }}",
-                text: "{{ text_delete_account_confirm }}" + name,
-                type: "error",
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "{{ text_confirm_delete }}",
-                cancelButtonText: "{{ text_cancel }}",
-                showCancelButton: true,
+          if (json['status']) {
+            elem.children('.js-loader').fadeOut();
+            elem.children('.js-title-1').removeClass('text-success');
+            elem.children('.js-title-1').removeClass('text-danger');
+            elem.children('.js-title-1').addClass(json['status']['color']);
+            elem.children('.js-title-1').text(json['status']['title_1']);
+            elem.children('.js-title-2').text(json['status']['title_2']);
+          }
+
+          if (json['name']) {
+            elem.children('.js-name').text(json['name']);
+          }  
+
+        }
+      });
+}
+</script>
+
+<script type="text/javascript">
+  $('.js-check-account').each(function(i,elem) {
+    checkAccount($(this).data('account_id'),$(elem));
+  });
+</script>
+
+<!-- Page JS Plugins -->
+<script src="view/stylesheet/smmposting/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Page JS Code -->
+<script type="text/javascript">
+    $(document).on('click', '.js-delete', function (e) {
+        var name = $(this).data('name');
+        
+        Swal.fire({
+            title: "Удалить?!",
+            text: "Подтвердите удаление аккаунта " + name,
+            type: "error",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Да, удалить!",
+            cancelButtonText: "Отменить",
+            showCancelButton: true,
 
             }).then(result => {
-                if (result.value) {
-                    var account_block = $(this).parent().parent();
-                    var account_id = $(this).attr('data-account_id');
+          if (result.value) {
+                  var account_block = $(this).parent().parent();
+            var account_id = $(this).attr('data-account_id');
 
-                    $.ajax({
-                        url: 'index.php?route=marketing/smmposting/deleteAccount&user_token={{ token }}',
-                        type: 'post',
-                        data: { account_id },
-                        dataType: 'json',
-                        success: function(json) {
-                            if (json['success']) {
-                                account_block.addClass("hidden");
-                                $('.message').addClass("hidden");
-                                $('.resp').addClass('alert alert-success');
-                                $('.resp').html('{{ text_account }} ' + name + ' {{ text_deleted }}');
-                            }
-                        }
-                    });
+            $.ajax({
+              url: 'index.php?route=marketing/smmposting/deleteAccount&user_token={{ token }}',
+              type: 'post',
+              data: {account_id},
+              dataType: 'json',
+              success: function(json) {
+
+                if (json['error']) {
+                }  
+
+                if (json['success']) {
+                  account_block.addClass("hidden");
+                  $('.message').addClass("hidden");
+                  $('.resp').addClass('alert alert-success');
+                  $('.resp').html('Аккаунт ' + name + ' удален!');
                 }
-            })
-        });
-    </script>
-    <script>
-        if (window.location.hash[0] == '#') {
-            window.location = window.location.origin + window.location.pathname + '?' + window.location.hash.substr(1) + '&' + window.location.search.substr(1);
-        }
-    </script>
+
+              }
+            });
+          } else {
+            // handle dismissals
+            // result.dismiss can be 'cancel', 'overlay', 'esc' or 'timer'
+          }
+        })
+    });
+</script>
+
+<script>
+    if (window.location.hash[0] == '#') {
+        window.location = window.location.origin + window.location.pathname + '?' + window.location.hash.substr(1) + '&' + window.location.search.substr(1);
+    }
+</script>
+</div>
 {{ footer }}

@@ -19,14 +19,3 @@
 <a href="{{	accounts_link }}" class="btn btn-{% if (route == 'marketing/smmposting/accounts') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-users"></i> <span class="hidden-xs">{{ text_accounts }}</span></a>
 <a href="{{ project_list }}" class="btn btn-{% if (route == 'marketing/smmposting/projects') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-briefcase"></i> <span class="hidden-xs">{{ text_projects }}</span></a>
 <a href="{{ settings }}" class="btn btn-{% if (route == 'marketing/smmposting/settings') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-cog fa-fw"></i> <span class="hidden-xs">{{ text_settings }}</span></a>
-
-{% if remain_to_pay %}
-<script>
-    Swal.fire({
-            icon: 'warning',
-            title: '{{ text_warning }}',
-            text: '{{ text_remain_to_pay }} {{ remain_to_pay }}',
-            footer: '<a href="https://smm-posting.ru/tariffs">{{ text_pay_now }}</a>',
-    })
-</script>
-{% endif %}

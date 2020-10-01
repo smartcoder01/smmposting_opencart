@@ -1,4 +1,4 @@
-@font-face {font-family:'DINRoundPro-Light';src: url('../fonts/DINRoundPro-Light.otf');}
+/*@font-face {font-family:'DINRoundPro-Light';src: url('../fonts/DINRoundPro-Light.otf');}*/
 
 ::-webkit-scrollbar {
     width: 5px;
@@ -417,4 +417,11 @@ span.js-name {
 
 ul.nav.nav-tabs {
     border-bottom: unset;
+}
+
+
+.row-flex {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
 }

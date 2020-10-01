@@ -26,53 +26,47 @@
 			</div>
 
 			<div class="col-sm-12 clearfix">
-				<div class="row">
+				<div class="row  row-flex">
 				<?php if (!empty($smm_projects)) { ?>
-					<form id="form" enctype="multipart/form-data" method="post" action="<?php echo $action;?>">
 					  <?php foreach( $smm_projects as $smm_project ) { ?>
 					  <div class="col-sm-4">
 						  <div class="card smm-project">
 							  <div class="card-header">
-								  <h4><?php echo $smm_project['project_name'];?></h4>
-
-								  <?php if ($smm_project['status'] == 1) { ?>
-									<span class="label label-success"><?php echo $text_enabled; ?></span>
-								  <?php } else { ?>
-									<span class="label label-danger"><?php echo $text_disabled; ?></span>
-								  <?php } ?>
+								  <h4><?php echo $smm_project['name'];?></h4>
 							  </div>
 							  <div class="card-body">
-
-
 								  <div class="row">
 									  <div class="col-sm-12">
-										  <?php if ($smm_project['ok_account_id']) { ?>
-										  <a class="socials"><i class="fa fa-odnoklassniki"></i></a>
-										  <?php } ?>
+										  <?php if (isset($smm_project['socials']) && is_array($smm_project['socials'])) { ?>
+											  <?php if (array_key_exists('ok',$smm_project['socials'])) { ?>
+											  <a class="socials"><i class="fa fa-odnoklassniki"></i></a>
+											  <?php } ?>
 
 
-										  <?php if ($smm_project['vk_account_id']) { ?>
-											  <a class="socials"><i class="fa fa-vk"></i></a>
-										  <?php } ?>
+											  <?php if (array_key_exists('vk',$smm_project['socials'])) { ?>
+												  <a class="socials"><i class="fa fa-vk"></i></a>
+											  <?php } ?>
 
-										  <?php if ($smm_project['tg_account_id'] ) { ?>
-											<a class="socials"><i class="fa fa-send"></i></a>
-										  <?php } ?>
+										      <?php if (array_key_exists('tg',$smm_project['socials'])) { ?>
+												<a class="socials"><i class="fa fa-send"></i></a>
+											  <?php } ?>
 
-										  <?php if ($smm_project['ig_account_id']) { ?>
-										  <a class="socials"><i class="fa fa-instagram"></i></a>
-										  <?php } ?>
+										  	  <?php if (array_key_exists('ig',$smm_project['socials'])) { ?>
+											  <a class="socials"><i class="fa fa-instagram"></i></a>
+											  <?php } ?>
 
-										  <?php if ($smm_project['fb_account_id']) { ?>
-										  <a class="socials"><i class="fa fa-facebook"></i></a>
-										  <?php } ?>
+										  <?php if (array_key_exists('fb',$smm_project['socials'])) { ?>
+											  <a class="socials"><i class="fa fa-facebook"></i></a>
+											  <?php } ?>
 
-										  <?php if ($smm_project['tb_account_id']) { ?>
-										  <a class="socials"><i class="fa fa-tumblr"></i></a>
-										  <?php } ?>
+										  <?php if (array_key_exists('tb',$smm_project['socials'])) { ?>
+											  <a class="socials"><i class="fa fa-tumblr"></i></a>
+											  <?php } ?>
 
-										  <?php if ($smm_project['tw_account_id']) { ?>
-										  <a class="socials"><i class="fa fa-twitter"></i></a>
+										  <?php if (array_key_exists('tw',$smm_project['socials'])) { ?>
+											  <a class="socials"><i class="fa fa-twitter"></i></a>
+											  <?php } ?>
+
 										  <?php } ?>
 
 
@@ -80,14 +74,13 @@
 								  </div>
 
 								  <div class="mt-2">
-									  <a class="btn btn-info" href="<?php echo $edit_project_link; ?>&project_id=<?php echo $smm_project['project_id']; ?>"><i class="fa fa-edit"></i> <?php echo $text_preview; ?></a>
-									  <a class="btn btn-danger" href="<?php echo $deleteproject_link; ?>&project_id=<?php echo $smm_project['project_id']; ?>"><i class="fa fa-trash"></i> <?php echo $text_delete; ?></a>
+									  <a class="btn btn-info" href="<?php echo $edit_project_link; ?>&id=<?php echo $smm_project['id']; ?>"><i class="fa fa-edit"></i> <?php echo $text_preview; ?></a>
+									  <a class="btn btn-danger" href="<?php echo $deleteproject_link; ?>&id=<?php echo $smm_project['id']; ?>"><i class="fa fa-trash"></i> <?php echo $text_delete; ?></a>
 								  </div>
 							  </div>
 						  </div>
 					  </div>
 					  <?php } ?>
-					</form>
 				<?php } else { ?>
 					<div class="text-center">
 						<div class="row">
@@ -101,6 +94,10 @@
 				<?php } ?>
 				</div>
 			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+			<div class="col-sm-6 text-right"><?php echo $results; ?></div>
 		</div>
 	</div>
 <?php echo $footer; ?>

@@ -267,7 +267,11 @@ class ControllerMarketingSmmposting extends Controller {
 
 		$data = $this->load_module_data();
 
-		$connected_accounts = $this->smmposting->api('connected_accounts');
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		$limit = isset($this->request->get['limit']) ? $this->request->get['limit'] : 10;
+
+		$connected_accounts = $this->smmposting->api('connected_accounts',['page'=>$page, 'limit'=>$limit]);
+		$count = isset($connected_accounts->count) ? $connected_accounts->count : 0;
 		$connected_accounts = isset($connected_accounts->result) ? $connected_accounts->result : [];
 		$data['accounts'] = json_decode(json_encode($connected_accounts), true);
 
@@ -281,6 +285,16 @@ class ControllerMarketingSmmposting extends Controller {
 
 		$data['allowed_socials'] = isset($result_auth_links->result) ? $result_auth_links->result : [];
 		$data['auth_links'] = $this->smmposting->getAuthLinks();
+
+		$pagination 		= new Pagination();
+		$pagination->total 	= $count;
+		$pagination->page 	= isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		$pagination->limit 	= $limit;
+		$pagination->url 	= $this->url->link('marketing/smmposting/accounts', $this->token_to_link() . '&page={page}', true);
+		$data['pagination']	= $pagination->render();
+		$data['results'] = sprintf($this->language->get('text_pagination'), ($pagination->total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($pagination->total - $this->config->get('config_limit_admin'))) ? $pagination->total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $pagination->total, ceil($pagination->total / $this->config->get('config_limit_admin')));
+
+
 
 		if (version_compare(VERSION, '3.0.0') >= 0) {
 			$this->response->setOutput($this->load->view('marketing/smmposting/accounts', $data));

@@ -181,6 +181,8 @@ $_ = [
     'text_warning' => ' pozor!',
     'text_remain_to_pay' => 'do okamžiku platby zbývají dny:',
     'text_pay_now' => 'zaplatit hned',
+        // 2.1
+        'smmposting_error_15' => 'Bilder (maximal 5 Stück) Müssen Hinzugefügt werden, um veröffentlicht zu werden',
 ];
 
 ?>

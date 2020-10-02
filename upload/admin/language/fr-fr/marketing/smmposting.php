@@ -181,6 +181,8 @@ $_ = [
     'text_warning' => 'Attention!',
     'text_remain_to_pay' => 'il reste des jours avant le paiement & # 160;:',
     'text_pay_now' => 'Payer maintenant',
+    // 2.1
+    'smmposting_error_15' => 'vous devez ajouter des images (5 pièces au maximum) pour les publier',
 ];
 
 ?>

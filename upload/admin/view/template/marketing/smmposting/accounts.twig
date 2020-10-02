@@ -232,7 +232,7 @@
                     var account_id = $(this).attr('data-account_id');
 
                     $.ajax({
-                        url: 'index.php?route=marketing/smmposting/deleteAccount&token={{ token }}',
+                        url: 'index.php?route=marketing/smmposting/deleteAccount&user_token={{ token }}',
                         type: 'post',
                         data: { account_id },
                         dataType: 'json',

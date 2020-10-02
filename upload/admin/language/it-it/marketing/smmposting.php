@@ -181,6 +181,8 @@ $_ = [
     'text_warning' => ' attenzione!',
     'text_remain_to_pay' => 'mancano giorni al Pagamento:',
     'text_pay_now' => 'Paga Adesso',
+    // 2.1
+    'smmposting_error_15' => ' per la pubblicazione è necessario aggiungere immagini (non più di 5 pezzi)',
 ];
 
 ?>

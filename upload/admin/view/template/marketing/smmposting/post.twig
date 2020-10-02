@@ -87,7 +87,13 @@
                                         <em class="js-qnt">{{ text_dont_forget_select_a_project }}</em></span>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-ok" {% if (("ok" not in allowed_socials) or "ok" not in post.socials) %} style="display: none" {% endif %}>
+                                    <select multiple="multiple" name="allowed[]" class="hidden form-control">
+                                        {% for soc in post.allowed %}
+                                            <option selected value="{{ soc }}">{{ soc }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <div class="form-group row fg-soc fg-ok" {% if hide_ok %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "ok" in post.socials ? "checked" : "") }} value="ok"  id="ok" name="socials[]" class="custom-control-input checkbox-social">
@@ -95,7 +101,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-vk" {% if (("vk" not in allowed_socials) or "vk" not in post.socials) %} style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-vk" {% if hide_vk %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "vk" in post.socials ? "checked" : "") }} value="vk"  id="vk" name="socials[]" class="custom-control-input checkbox-social">
@@ -103,7 +109,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-tg" {% if (("tg" not in allowed_socials) or "tg" not in post.socials) %} style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-tg" {% if hide_tg %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "tg" in post.socials ? "checked" : "") }} value="tg" id="tg" name="socials[]" class="custom-control-input checkbox-social">
@@ -111,7 +117,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-ig" {% if (("ig" not in allowed_socials) or "ig" not in post.socials) %} style="display: none"  {% endif %}>
+                                    <div class="form-group row fg-soc fg-ig" {% if hide_ig %} style="display: none"  {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "ig" in post.socials ? "checked" : "") }} value="ig" id="ig" name="socials[]" class="custom-control-input checkbox-social">
@@ -119,7 +125,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-fb" {% if (("fb" not in allowed_socials) or "fb" not in post.socials) %} style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-fb" {% if hide_fb %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "fb" in post.socials ? "checked" : "") }} value="fb" id="fb" name="socials[]" class="custom-control-input checkbox-social">
@@ -127,7 +133,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-tb" {% if (("tb" not in allowed_socials) or "tb" not in post.socials) %} style="display: none"  {% endif %}>
+                                    <div class="form-group row fg-soc fg-tb" {% if hide_tb %} style="display: none"  {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "tb" in post.socials ? "checked" : "") }} value="tb" id="tb" name="socials[]" class="custom-control-input checkbox-social">
@@ -135,7 +141,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-tw" {% if (("tw" not in allowed_socials) or "tw" not in post.socials) %} style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-tw" {% if hide_tw %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" {{ (post.socials is defined and "tw" in post.socials ? "checked" : "") }} value="tw" id="tw" name="socials[]" class="custom-control-input checkbox-social">
@@ -163,7 +169,7 @@
                                     <label class="control-label">{{ text_date_publications }}</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <input id="date_public" type="date" class="form-control" name="date_public" value=" {% if (post['date_public'] is not defined) %} {{ date("Y-m-d") }} {% else %} {{ post['date_public'] }}{% endif %}">
+                                            <input id="date_public" type="date" class="form-control" name="date_public" value="{{ post['date_public'] }}">
                                             <span class="dated" id="date_today">{{ text_today }}</span> | <span id="date_tomorrow" class="dated">{{ text_tomorrow }}</span> | <span id="date_after_tomorrow" class="dated">{{ text_after_tomorrow }}</span>
                                         </div>
                                     </div>
@@ -324,6 +330,14 @@
 
                             let allowed_count = 0
                             let allowed = json['result']['allowed'];
+
+                            //  CHANGE ALLOWED
+                            let allowed_options = '';
+                            $.each(allowed, function(index, value) {
+                                allowed_options += '<option value="'+value+'" selected>'+value+'</option>'
+                            });
+                            $("select[name=\'allowed[]\']").html(allowed_options);
+                            /////////////////
 
                             if (allowed.includes("ok")) {
                                 $('.fg-ok').show();

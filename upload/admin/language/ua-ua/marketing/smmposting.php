@@ -1,8 +1,8 @@
 <?php
 $_ = [
-        'text_smmposting'                   => 'SMM-posting',
-        'heading_title'                     => 'SMM-posting.ru',
-        'heading_description_smmposting' => 'Автоматична публікація в соціальні мережі',
+    'text_smmposting'                   => 'SMM-posting',
+    'heading_title'                     => 'SMM-posting.ru',
+    'heading_description_smmposting' => 'Автоматична публікація в соціальні мережі',
     'heading_description_posts' => 'пости',
     'heading_description_post' => 'Пост для вивантаження в соціальну мережу',
     'heading_description_products' => 'товари',
@@ -189,6 +189,8 @@ $_ = [
     'text_warning' => ' увага!',
     'text_remain_to_pay' => 'до моменту оплати залишилося днів:',
     'text_pay_now' => 'оплатити прямо зараз',
+    // 2.1
+    'smmposting_error_15' => 'для публікації необхідно додати картинки (не більше 5 шт)',
 ];
 
 ?>

@@ -181,6 +181,8 @@ $_ = [
     'text_warning' => ' atenție!',
     'text_remain_to_pay' => 'până la data plății au rămas zile:',
     'text_pay_now' => 'plătește acum',
+    // 2.1
+    'smmposting_error_15' => ' pentru publicare trebuie să adăugați imagini (nu mai mult de 5 buc)',
 ];
 
 ?>

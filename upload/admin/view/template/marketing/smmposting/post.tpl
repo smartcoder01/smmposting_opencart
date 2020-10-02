@@ -88,7 +88,14 @@
                                     </div>
 
 
-                                    <div class="form-group row fg-soc fg-ok" <?php if ((!in_array("ok",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("ok",$post['socials'])) ) { ?>style="display: none"<?php } ?>>
+                                    <select multiple="multiple" name="allowed[]" class="hidden form-control">
+                                        <?php foreach ($post['allowed'] as $soc) { ?>
+                                            <option selected value="<?php echo $soc; ?>"><?php echo $soc; ?></option>
+                                        <?php } ?>
+                                    </select>
+
+
+                                    <div class="form-group row fg-soc fg-ok" <?php if ($hide_ok) { ?>style="display: none"<?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("ok",$post['socials']) ? "checked" : ""); ?> value="ok"  id="ok" name="socials[]" class="custom-control-input checkbox-social">
@@ -96,7 +103,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-vk" <?php if ((!in_array("vk",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("vk",$post['socials'])) ) { ?> style="display: none"  <?php } ?>>
+                                    <div class="form-group row fg-soc fg-vk" <?php if ($hide_vk) { ?> style="display: none"  <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("vk",$post['socials']) ? "checked" : ""); ?> value="vk"  id="vk" name="socials[]" class="custom-control-input checkbox-social">
@@ -105,7 +112,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-tg" <?php if ((!in_array("tg",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("tg",$post['socials'])) ) { ?>style="display: none" <?php } ?>>
+                                    <div class="form-group row fg-soc fg-tg" <?php if ($hide_tg) { ?>style="display: none" <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("tg",$post['socials']) ? "checked" : ""); ?> value="tg" id="tg" name="socials[]" class="custom-control-input checkbox-social">
@@ -114,7 +121,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-ig" <?php if ((!in_array("ig",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("ig",$post['socials'])) ) { ?>style="display: none" <?php } ?>>
+                                    <div class="form-group row fg-soc fg-ig" <?php if ($hide_ig) { ?>style="display: none" <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("ig",$post['socials']) ? "checked" : ""); ?> value="ig" id="ig" name="socials[]" class="custom-control-input checkbox-social">
@@ -123,7 +130,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-fb" <?php if ((!in_array("fb",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("fb",$post['socials'])) ) { ?>style="display: none" <?php } ?>>
+                                    <div class="form-group row fg-soc fg-fb" <?php if ($hide_fb) { ?>style="display: none" <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("fb",$post['socials']) ? "checked" : ""); ?> value="fb" id="fb" name="socials[]" class="custom-control-input checkbox-social">
@@ -132,7 +139,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-tb" <?php if ((!in_array("tb",$allowed_socials) && !isset($post['socials']) ) || !(isset($post['socials']) && in_array("tb",$post['socials'])) ) { ?>style="display: none" <?php } ?>>
+                                    <div class="form-group row fg-soc fg-tb" <?php if ($hide_tb) { ?>style="display: none" <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("tb",$post['socials']) ? "checked" : ""); ?> value="tb" id="tb" name="socials[]" class="custom-control-input checkbox-social">
@@ -141,7 +148,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row fg-soc fg-tw" <?php if (!in_array("tw",$allowed_socials) || (isset($post['socials']) && !array_key_exists("tw",$post['socials']))) { ?>style="display: none" <?php } ?>>
+                                    <div class="form-group row fg-soc fg-tw" <?php if ($hide_tw) { ?>style="display: none" <?php } ?>>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
                                                 <input type="checkbox" <?php echo (isset($post['socials']) && in_array("tw",$post['socials']) ? "checked" : ""); ?> value="tw" id="tw" name="socials[]" class="custom-control-input checkbox-social">
@@ -167,7 +174,7 @@
                                     <label class="control-label"><?php echo $text_date_publications; ?></label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <input id="date_public" type="date" class="form-control" name="date_public" value="<? if (!isset($post['date_public'])) { echo date("Y-m-d"); } else echo $post['date_public']; ?>">
+                                            <input id="date_public" type="date" class="form-control" name="date_public" value="<?php echo $post['date_public']; ?>">
                                             <span class="dated" id="date_today"><?php echo $text_today; ?></span> | <span id="date_tomorrow" class="dated"><?php echo $text_tomorrow; ?></span> | <span id="date_after_tomorrow" class="dated"><?php echo $text_after_tomorrow; ?></span>
                                         </div>
                                     </div>
@@ -329,6 +336,14 @@ toolbar : 'Full',
 
                             let allowed_count = 0
                             let allowed = json['result']['allowed'];
+
+                            //  CHANGE ALLOWED
+                            let allowed_options = '';
+                            $.each(allowed, function(index, value) {
+                                allowed_options += '<option value="'+value+'" selected>'+value+'</option>'
+                            });
+                            $("select[name=\'allowed[]\']").html(allowed_options);
+                            /////////////////
 
                             if (allowed.includes("ok")) {
                                 $('.fg-ok').show();

@@ -2,7 +2,7 @@
 
 /**
  * @package SMM-Posting for Opencart 2.3-3.0
- * @version 2.0
+ * @version 2.1
  * @author smartcoder & vladgaus
  * @copyright https://smm-posting.ru
  */
@@ -282,7 +282,6 @@ class ControllerMarketingSmmposting extends Controller {
 			$data['server_link'] = HTTP_SERVER.'?route=marketing/smmposting/accounts&'.$this->token_to_link();
 		}
 		$result_auth_links = $this->smmposting->api('socials', ['redirect_url' => $data['server_link']]);
-
 		$data['allowed_socials'] = isset($result_auth_links->result) ? $result_auth_links->result : [];
 		$data['auth_links'] = $this->smmposting->getAuthLinks();
 
@@ -330,6 +329,7 @@ class ControllerMarketingSmmposting extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePermission()) {
 
 			$request = $this->request->request;
+
 			$this->session->data['old'] = array('post'=>$request);
 			/*
 			|--------------------------------------------------------------------------
@@ -372,6 +372,10 @@ class ControllerMarketingSmmposting extends Controller {
 			if (isset($request['socials'])) {
 				$request['socials'] = json_encode($request['socials']);
 			}
+			if (isset($request['allowed'])) {
+				unset($request['allowed']);
+			}
+
 			if (isset($request['id'])) {
 				//	Send to SMMposting
 				$results = $this->smmposting->api('update_post/'.(int)$request['id'], $request, 'PATCH');
@@ -423,7 +427,9 @@ class ControllerMarketingSmmposting extends Controller {
 			$data['post'] = [];
 		}
 
-		$data['allowed_socials'] = isset($project_info['allowed']) ? $project_info['allowed'] : [];
+		if (!isset($this->session->data['old'])) {
+			$data['post']['allowed'] = isset($project_info['allowed']) ? $project_info['allowed'] : [];
+		}
 
 		//	Send to SMMposting
 		$results = $this->smmposting->api('list_projects', ['limit'=>100]);
@@ -432,16 +438,29 @@ class ControllerMarketingSmmposting extends Controller {
 		$data['projects'] = json_decode(json_encode($smm_projects), true);
 
 		$data['cancel'] = $this->url->link('marketing/smmposting/posts', $this->token_to_link(), true);
+
+		$data['post']['date_public'] = isset($data['post']['date_public']) ? $data['post']['date_public'] : date("Y-m-d");
 		## Time
 		$data['date_today'] = date("Y-m-d");
 		$data['date_tomorrow'] = date('Y-m-d', strtotime("+1 day"));
 		$data['date_after_tommorrow'] = date('Y-m-d', strtotime("+2 day"));
+
 
 		//	OLD DATA
 		if (isset($this->session->data['old'])) {
 			$data = array_replace($data, $this->session->data['old']);
 			unset($this->session->data['old']);
 		}
+
+		//	HIDE SOCIALS AFTER OLD DATA
+		$data['hide_ok'] = (!in_array("ok",$data['post']['allowed']));
+		$data['hide_vk'] = (!in_array("vk",$data['post']['allowed']));
+		$data['hide_tg'] = (!in_array("tg",$data['post']['allowed']));
+		$data['hide_ig'] = (!in_array("ig",$data['post']['allowed']));
+		$data['hide_fb'] = (!in_array("fb",$data['post']['allowed']));
+		$data['hide_tw'] = (!in_array("tw",$data['post']['allowed']));
+		$data['hide_tb'] = (!in_array("tb",$data['post']['allowed']));
+
 
 		if (version_compare(VERSION, '3.0.0') >= 0) {
 			$this->response->setOutput($this->load->view('marketing/smmposting/post', $data));
@@ -527,6 +546,7 @@ class ControllerMarketingSmmposting extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePermission()) {
 
 			$request = $this->request->request;
+
 			$this->session->data['old'] = array('project'=>$request);
 
 			/*
@@ -539,18 +559,22 @@ class ControllerMarketingSmmposting extends Controller {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_8');
 			}
 
+			//	OK
 			if ($request['ok_account_id'] && !isset($request['ok_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_9');
 			}
 
+			//	VK
 			if ($request['vk_account_id'] && !isset($request['vk_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_10');
 			}
 
+			//	TG
 			if ($request['tg_account_id'] && empty($request['tg_chat_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_11');
 			}
 
+			//	FB
 			if ($request['fb_account_id'] && !isset($request['fb_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_12');
 			}
@@ -565,6 +589,8 @@ class ControllerMarketingSmmposting extends Controller {
 
 			/////////////////////////////////////////
 
+
+
 			if (!$request['ok_account_id'] && !isset($request['ok_group_id'])) {
 				unset($request['ok_account_id']);
 			}
@@ -573,7 +599,7 @@ class ControllerMarketingSmmposting extends Controller {
 				unset($request['vk_account_id']);
 			}
 
-			if (!$request['tg_account_id'] && empty($request['tg_chat_id'])) {
+			if (!$request['tg_account_id'] && isset($request['tg_chat_id'])) {
 				unset($request['tg_account_id']);
 				unset($request['tg_chat_id']);
 			}

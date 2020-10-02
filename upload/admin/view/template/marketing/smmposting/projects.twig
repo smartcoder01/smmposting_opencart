@@ -8,12 +8,12 @@
     </div>
 
     <div class="smmposting-container">
-        {% if error_warning %}
+        {% if (error_warning) %}
             <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
-        {% if success %}
+        {% if (success) %}
             <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
@@ -26,79 +26,78 @@
             </div>
 
             <div class="col-sm-12 clearfix">
-                <div class="row">
-                    {% if smm_projects %}
-                    <form id="form" enctype="multipart/form-data" method="post" action="{{ action }}">
+                <div class="row  row-flex">
+                    {% if (smm_projects is not empty) %}
                         {% for smm_project in smm_projects %}
-                        <div class="col-sm-4">
-                            <div class="card smm-project">
-                                <div class="card-header">
-                                    <h4>{{ smm_project.project_name }}</h4>
-
-                                    {% if smm_project.status  ==  1 %}
-                                    <span class="label label-success">{{ text_enabled }}</span>
-                                    {% else %}
-                                        <span class="label label-danger">{{ text_disabled }}</span>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            {% if smm_project.ok_account_id %}
-                                                <a class="socials"><i class="fa fa-odnoklassniki"></i></a>
-                                            {% endif %}
-
-
-                                            {% if smm_project.vk_account_id %}
-                                                <a class="socials"><i class="fa fa-vk"></i></a>
-                                            {% endif %}
-
-                                            {% if smm_project.tg_account_id  %}
-                                                <a class="socials"><i class="fa fa-send"></i></a>
-                                            {% endif %}
-
-                                            {% if smm_project.ig_account_id %}
-                                                <a class="socials"><i class="fa fa-instagram"></i></a>
-                                            {% endif %}
-
-                                            {% if smm_project.fb_account_id %}
-                                                <a class="socials"><i class="fa fa-facebook"></i></a>
-                                            {% endif %}
-
-                                            {% if smm_project.tb_account_id %}
-                                                <a class="socials"><i class="fa fa-tumblr"></i></a>
-                                            {% endif %}
-
-                                            {% if smm_project.tw_account_id %}
-                                                <a class="socials"><i class="fa fa-twitter"></i></a>
-                                            {% endif %}
-
-
-                                        </div>
+                            <div class="col-sm-4">
+                                <div class="card smm-project">
+                                    <div class="card-header">
+                                        <h4>{{ smm_project['name'] }}</h4>
                                     </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {% if (smm_project['socials'] is defined) %}
+                                                    {% if (smm_project.socials.ok is defined) %}
+                                                        <a class="socials"><i class="fa fa-odnoklassniki"></i></a>
+                                                    {% endif %}
 
-                                    <div class="mt-2">
-                                        <a class="btn btn-info" href="{{ edit_project_link }}&project_id={{ smm_project.project_id }}"><i class="fa fa-edit"></i> {{ text_preview }}</a>
-                                        <a class="btn btn-danger" href="{{ deleteproject_link }}&project_id={{ smm_project.project_id }}"><i class="fa fa-trash"></i> {{ text_delete }}</a>
+
+                                                    {% if (smm_project.socials.vk is defined) %}
+                                                        <a class="socials"><i class="fa fa-vk"></i></a>
+                                                    {% endif %}
+
+                                                    {% if (smm_project.socials.tg is defined) %}
+                                                        <a class="socials"><i class="fa fa-send"></i></a>
+                                                    {% endif %}
+
+                                                    {% if (smm_project.socials.ig is defined) %}
+                                                        <a class="socials"><i class="fa fa-instagram"></i></a>
+                                                    {% endif %}
+
+                                                    {% if (smm_project.socials.fb is defined) %}
+                                                        <a class="socials"><i class="fa fa-facebook"></i></a>
+                                                    {% endif %}
+
+                                                    {% if (smm_project.socials.tb is defined) %}
+                                                        <a class="socials"><i class="fa fa-tumblr"></i></a>
+                                                    {% endif %}
+
+                                                    {% if (smm_project.socials.tw is defined) %}
+                                                        <a class="socials"><i class="fa fa-twitter"></i></a>
+                                                    {% endif %}
+
+                                                {% endif %}
+
+
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-2">
+                                            <a class="btn btn-info" href="{{ edit_project_link }}&id={{ smm_project['id'] }}"><i class="fa fa-edit"></i> {{ text_preview }}</a>
+                                            <a class="btn btn-danger" href="{{ deleteproject_link }}&id={{ smm_project['id'] }}"><i class="fa fa-trash"></i> {{ text_delete }}</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         {% endfor %}
-                    </form>
                     {% else %}
-                    <div class="text-center">
-                        <div class="row">
-                            <a href="{{ add_project_link }}" title="{{ button_add_project }}">
-                                <img src="/admin/view/image/smmposting/smm.gif">
-                            </a>
-                        </div>
-                        <a href="{{ add_project_link }}" style="margin-bottom:2rem;" class="btn btn-success btn-md"><i class="fa fa-plus"></i> <span class="hidden-xs">{{ button_add_project }}</span></a>
-                    </div>
-                    {% endif %}
+                        <div class="text-center">
+                            <div class="row">
+                                <a href="{{ add_project_link }}" title="{{ button_add_project }}">
+                                    <img src="/admin/view/image/smmposting/smm.gif">
+                                </a>
+                            </div>
 
+                            <a href="{{ add_project_link }}" style="margin-bottom:2rem;" class="btn btn-success btn-md"><i class="fa fa-plus"></i> <span class="hidden-xs">{{ button_add_project }}</span></a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 text-left">{{ pagination }}</div>
+            <div class="col-sm-6 text-right">{{ results }}</div>
         </div>
     </div>
 {{ footer }}

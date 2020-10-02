@@ -159,7 +159,7 @@
 
         <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title" id="js-title"><i class="fa fa-users"></i><?php echo $text_accounts; ?></h3>
+                        <h3 class="panel-title" id="js-title"><i class="fa fa-users"></i><?php echo $text_accounts; ?> (<?php echo $count; ?>)</h3>
                     </div>
                     <div class="tab-content">
                         <table class="table table-striped mb-0">

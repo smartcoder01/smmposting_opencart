@@ -216,9 +216,9 @@
 </div>
 
 <script type="text/javascript">
-        const today = "<?php echo date('Y-m-d'); ?>";
-        const tomorrow = "<?php echo date('Y-m-d', strtotime('+1 day')); ?>";
-        const after_tommorrow = '<?php echo date('Y-m-d', strtotime("+2 day")); ?>';
+        const today = "<?php echo $date_after_tommorrow; ?>";
+        const tomorrow = "<?php echo $date_tommorrow; ?>";
+        const after_tommorrow = '<?php echo $date_after_tommorrow; ?>';
         const time_1 = '9';
         const time_2 = '14';
         const time_3 = '18';

@@ -48,7 +48,7 @@
 
                                 <div class="clearfix mt-2">
                                     <small class="resp-quick-export d-flex"><?php echo $text_time_publications; ?></small>
-                                    <strong><?php echo $post['date_public']; ?> (<?php echo date('H:i', strtotime($post['time_public']));  ?>)</strong>
+                                    <strong><?php echo $post['date_public']; ?></strong>
                                 </div>
                             </div>
                             <div class="card-body">

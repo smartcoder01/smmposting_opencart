@@ -2,20 +2,32 @@
 
 <h1 class="smm-heading-title">{{ heading_title }}</h1><br>
 <div class="resp-account-smmposting">
-    {% if smmposting_profile is defined %}
-    <b>ACID:</b> {{ smmposting_profile.id }}<br>
-    <b>{{ text_smmposting_1 }}</b> {{ smmposting_profile.tariff }}<br>
-    <b>{{ text_smmposting_2 }}</b> {{ smmposting_profile.date_off }}<br>
+    {% if (smmposting_profile is defined) %}
+        <b>ACID:</b> {{ smmposting_profile.id }}<br>
+        <b>{{ text_smmposting_1 }}</b> {{ smmposting_profile.tariff }}<br>
+        <b>{{ text_smmposting_2 }}</b> {{ smmposting_profile.date_off }}<br>
     {% endif %}
 
-    {% if error_connect is defined %}
+    {% if (error_connect is defined) %}
         {{ text_smmposting_4 }} {{ error_connect }}<br>
     {% endif %}
     <b>{{ text_smmposting_3 }}</b> {{ version }}<br>
 </div>
 
-<a href="{{ posts_link }}" class="btn btn-{% if (route == 'marketing/smmposting/posts') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-file fa-fw"></i> <span class="hidden-xs">{{ text_posts }}</span></a>
-<a href="{{	products_link }}" class="btn btn-{% if (route == 'marketing/smmposting/products') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-list-alt fa-fw"></i> <span class="hidden-xs">{{ text_products }}</span></a>
-<a href="{{	accounts_link }}" class="btn btn-{% if (route == 'marketing/smmposting/accounts') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-users"></i> <span class="hidden-xs">{{ text_accounts }}</span></a>
-<a href="{{ project_list }}" class="btn btn-{% if (route == 'marketing/smmposting/projects') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-briefcase"></i> <span class="hidden-xs">{{ text_projects }}</span></a>
-<a href="{{ settings }}" class="btn btn-{% if (route == 'marketing/smmposting/settings') %}primary{% else %}info{% endif %} btn-md"><i class="fa fa-cog fa-fw"></i> <span class="hidden-xs">{{ text_settings }}</span></a>
+
+<a href="{{ posts_link }}"    class="btn btn-{{ _GET['route'] == 'marketing/smmposting/posts' ? 'info' : 'primary' }} btn-md"><i class="fa fa-send fa-fw"></i> <span class="hidden-xs">{{ text_posts }}</span></a>
+<a href="{{ accounts_link }}" class="btn btn-{{ _GET['route'] == 'marketing/smmposting/accounts' ? 'info' : 'primary' }} btn-md"><i class="fa fa-users"></i> <span class="hidden-xs">{{ text_accounts }}</span></a>
+<a href="{{ project_list }}"  class="btn btn-{{ _GET['route'] == 'marketing/smmposting/projects' ? 'info' : 'primary' }} btn-md"><i class="fa fa-briefcase"></i> <span class="hidden-xs">{{ text_projects }}</span></a>
+<a href="{{ contact_link }}"  class="btn btn-{{ _GET['route'] == 'marketing/smmposting/contact' ? 'info' : 'primary' }} btn-md"><i class="fa fa-quote-right fa-fw"></i> <span class="hidden-xs">{{ text_contacts }}</span></a>
+
+
+{% if (remain_to_pay is defined) %}
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Внимание!',
+            text: 'До момента оплаты осталось дней: {{ remain_to_pay }}',
+            footer: '<a href="https://smm-posting.ru/tariffs">Оплатить прямо сейчас?</a>',
+        })
+    </script>
+{% endif %}

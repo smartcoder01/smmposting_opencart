@@ -189,4 +189,6 @@ $_ = [
     'text_warning'                      => 'Attention!',
     'text_remain_to_pay'                => 'There are days left until the payment is made:',
     'text_pay_now'                      => 'Pay now',
+    //  2.1
+    'smmposting_error_15'               => 'Dont forget add media files',
 ];

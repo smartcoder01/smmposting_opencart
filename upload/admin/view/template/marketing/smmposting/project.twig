@@ -7,12 +7,12 @@
 		</div>
 	</div>
 	<div class="smmposting-container">
-		{% if error_warning %}
+		{% if (error_warning) %}
 			<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>
 		{% endif %}
-		{% if success %}
+		{% if (success) %}
 			<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>
@@ -37,23 +37,7 @@
 								<div class="col-lg-12">
 									<div class="card-box">
 										<label>{{ text_project_name }}</label>
-										<input placeholder="{{ text_project_placeholder }}" class="form-control" type="text" name="project_name" value="{{ project.project_name }}" size="40" />
-										<br>
-										<label>{{ text_status }}</label>
-										<select class="form-control" name="status">
-											{% if project %}
-												{% if project.status == 1 %}
-													<option value="1" selected="selected">{{ text_enabled }}</option>
-													<option value="0">{{ text_disabled }}</option>
-												{% elseif project.status == 0 %}
-													<option value="0" selected="selected">{{ text_disabled }}</option>
-													<option value="1">{{ text_enabled }}</option>
-												{% endif %}
-											{% else %}
-												<option value="1" selected="selected">{{ text_enabled }}</option>
-												<option value="0">{{ text_disabled }}</option>
-											{% endif %}
-										</select>
+										<input placeholder="{{ text_project_placeholder }}" class="form-control" type="text" name="name" value=" {{ project['name'] is defined ? project['name'] : '' }}" size="40" />
 									</div>
 								</div>
 							</div>
@@ -70,168 +54,171 @@
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active  col-sm-12" id="tab-odnoklassniki" >
-										{% if accounts.odnoklassniki %}
-										<div class="form-group">
-											<div class="js-alert-ok alert alert-danger hidden"></div>
-											<label>{{ text_account }} <i class="fa fa-odnoklassniki"></i></label>
-											<select class="form-control" name="ok_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-													<option data-token="{{ account.ok_access_token }}" value="{{ account.account_id }}" {% if project.ok_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<label class="label-ok-groups"><i class="js-ok-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
-											<select class="form-control resp-ok-groups" name="ok_group_id"></select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="ok"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+										{% if (accounts['ok'] is not empty) %}
+											<div class="form-group">
+												<div class="js-alert-ok alert alert-danger hidden"></div>
+												<label>{{ text_account }} <i class="fa fa-odnoklassniki"></i></label>
+												<select data-callback="ok_group_id" class="form-control js-account" name="ok_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['ok'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['ok']['id'] is defined and project['socials']['ok']['id'] == account['id']) or (project['ok_account_id'] is defined and project['ok_account_id'] == account['id'] )) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<label>{{ text_group_for_posting }}</label>
+												<select id="ok_group_id" class="form-control" name="ok_group_id"></select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="ok"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ok }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
-										{% endif %}
-									</div>
-									<div class="tab-pane col-sm-12" id="tab-telegram">
-										{% if accounts.telegram %}
-										<div class="form-group">
-											<div class="alert alert-info">{{ text_telegram_info }}</div>
-											<label>{{ text_account }} <i class="fa fa-send"></i></label>
-											<select class="form-control" name="tg_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-													<option value="{{ account.account_id }}" {% if project.tg_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<label>{{ text_group_for_posting }}</label>
-											<input  id="telegram_chat_id" class="form-control"  placeholder="@channel_name" name="telegram_chat_id" value="<? echo (isset($project['telegram_chat_id']) ? $project['telegram_chat_id'] : ''); ">
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="tg"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
-										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tg }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ok }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 									</div>
 									<div class="tab-pane col-sm-12" id="tab-vkontakte">
-
-										{% if accounts.vkontakte %}
-										<div class="form-group">
-											<div class="js-alert-vk alert alert-danger hidden"></div>
-											<label>{{ text_account }} <i class="fa fa-vk"></i></label>
-											<select class="form-control" name="vk_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-													<option data-token="{{ account.vk_access_token }}" data-vk_user_id="{{ account.vk_user_id }}" value="{{ account.account_id }}" {% if project.vk_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<label class="label-vk-groups"><i class="js-vk-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
-											<select class="form-control resp-vk-groups" name="vk_group_id"></select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="vk"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+										{% if (accounts['vk'] is not empty) %}
+											<div class="form-group">
+												<div class="js-alert-vk alert alert-danger hidden"></div>
+												<label>{{ text_account }} <i class="fa fa-vk"></i></label>
+												<select data-callback="vk_group_id" class="form-control js-account" name="vk_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['vk'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['vk']['id'] is defined and project['socials']['vk']['id'] == account['id']) or (project['vk_account_id'] is defined and project['vk_account_id'] == account['id'] )) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<label>{{ text_group_for_posting }}</label>
+												<select id="vk_group_id" class="form-control resp-vk-groups" name="vk_group_id"></select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="vk"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_vk }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_vk }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 
 									</div>
-									<div class="tab-pane col-sm-12" id="tab-instagram">
-										{% if accounts.instagram %}
-										<div class="form-group">
-											<label>{{ text_account }} <i class="fa fa-instagram"></i></label>
-											<select class="form-control" name="ig_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-												<option value="{{ account.account_id }}" {% if project.ig_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="ig"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+									<div class="tab-pane col-sm-12" id="tab-telegram">
+										{% if (accounts['tg'] is not empty) %}
+											<div class="form-group">
+												<div class="alert alert-info">{{ text_telegram_info }}</div>
+												<label>{{ text_account }} <i class="fa fa-send"></i></label>
+												<select class="form-control" name="tg_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['tg'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['tg']['id'] is defined and project['socials']['tg']['id'] == account['id']) or (project['tg_account_id'] is defined and project['tg_account_id'] == account['id'] )) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<label>{{ text_group_for_posting }}</label>
+												<input  id="tg_chat_id" class="form-control"  placeholder="@channel_name" name="tg_chat_id" value=" {{ project['telegram_chat_id'] is defined ? project['telegram_chat_id'] : '' }}">
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="tg"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ig }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tg }}<</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 									</div>
 									<div class="tab-pane col-sm-12" id="tab-facebook">
-										{% if accounts.facebook %}
-										<div class="form-group">
-											<div class="js-alert-fb alert alert-danger hidden"></div>
-											<label>{{ text_account }} <i class="fa fa-facebook"></i></label>
-											<select class="form-control" name="fb_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-												<option
-														{% if project.fb_account_id %}
-															{% if project.fb_account_id  ==  account.account_id %}
-																selected
-															{% endif %}
-														{% endif %}
-														data-token="{{ account.fb_access_token }}"
-														data-fb_user_id="{{ account.fb_user_id }}"
-														value="{{ account.account_id }}">
-													{{ account.account_name }}
-												</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<label class="label-fb-groups"><i class="js-vk-group-loader hidden fa fa-refresh fa-spin"></i> {{ text_group_for_posting }}</label>
-											<select class="form-control resp-fb-groups" name="fb_group_id"></select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="fb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+										{% if (accounts['fb'] is not empty) %}
+											<div class="form-group">
+												<div class="js-alert-fb alert alert-danger hidden"></div>
+												<label>{{ text_account }} <i class="fa fa-facebook"></i></label>
+												<select data-callback="fb_group_id" class="form-control js-account" name="fb_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['fb'] %}
+														<option
+																{% if ((project['socials']['fb']['id'] is defined and project['socials']['fb']['id'] == account['id']) or (project['fb_account_id'] is defined and project['fb_account_id'] == account['id']) ) %}
+																	selected{% endif %} value="{{ account['id'] }}"> {{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<label>{{ text_group_for_posting }}</label>
+												<select id="fb_group_id" class="form-control resp-fb-groups" name="fb_group_id"></select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="fb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_fb }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_fb }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+										{% endif %}
+									</div>
+									<div class="tab-pane col-sm-12" id="tab-instagram">
+										{% if (accounts['ig'] is not empty) %}
+											<div class="form-group">
+												<label>{{ text_account }} <i class="fa fa-instagram"></i></label>
+												<select class="form-control" name="ig_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['ig'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['ig']['id'] is defined and project['socials']['ig']['id'] == account['id']) or (project['ig_account_id'] is defined and project['ig_account_id'] == account['id']) ) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="ig"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
+										{% else %}
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_ig }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 									</div>
 									<div class="tab-pane col-sm-12" id="tab-tumblr">
-										{% if accounts.tumblr %}
-										<div class="form-group">
-											<label>{{ text_account }} <i class="fa fa-tumblr"></i></label>
-											<select class="form-control" name="tb_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-												<option value="{{ account.account_id }}" {% if project.tb_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="tb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+										{% if (accounts['tb'] is not empty) %}
+											<div class="form-group">
+												<label>{{ text_account }} <i class="fa fa-tumblr"></i></label>
+												<select class="form-control" name="tb_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['tb'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['tb']['id'] is defined and project['socials']['tb']['id'] == account['id']) or (project['tb_account_id'] is defined and project['tb_account_id'] == account['id']) ) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="tb"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tb }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tb }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 									</div>
 									<div class="tab-pane col-sm-12" id="tab-twitter">
-										{% if accounts.twitter %}
-										<div class="form-group">
-											<label>{{ text_account }} <i class="fa fa-twitter"></i></label>
-											<select class="form-control" name="tw_account_id">
-												<option value="0">{{ text_select_account }}</option>
-												{% for account in accounts %}
-												<option value="{{ account.account_id }}"{% if project.tw_account_id == account.account_id %}selected {% endif %}>{{ account.account_name }}</option>
-												{% endfor %}
-											</select>
-										</div>
-										<div class="form-group">
-											<a class="badge bg-light js-trash" data-social="tw"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
-										</div>
+										{% if (accounts['tw'] is not empty) %}
+											<div class="form-group">
+												<label>{{ text_account }} <i class="fa fa-twitter"></i></label>
+												<select class="form-control" name="tw_account_id">
+													<option value="0">{{ text_select_account }}</option>
+													{% for account in accounts['tw'] %}
+														<option value="{{ account['id'] }}"
+																{% if ((project['socials']['tw']['id'] is defined and project['socials']['tw']['id'] == account['id']) or (project['tw_account_id'] is defined and project['tw_account_id'] == account['id']) ) %}
+														selected{% endif %}>{{ account['account_name'] }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group">
+												<a class="badge bg-light js-trash" data-social="tw"><i class="fa fa-trash"></i> {{ text_not_use_in_project }}</a>
+											</div>
 										{% else %}
-										<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tw }}</div>
-										<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
+											<div class="alert alert-info">{{ text_create_account_before_create }}{{ text_tw }}</div>
+											<a class="btn btn-info" href="{{ accounts_link }}">{{ text_redirect_to_accounts }}</a>
 										{% endif %}
 									</div>
 								</div>
@@ -252,12 +239,11 @@
 		switch (social) {
 			case 'ok':
 				$("select[name=\'ok_account_id\'] option[value=\'0\']").prop('selected', true);
-				$('.resp-ok-groups').html('');
-				$('.js-alert-ok').addClass('hidden');
+				$("select[name=\'ok_group_id']").html('');
 				break;
 			case 'vk':
 				$("select[name=\'vk_account_id\'] option[value=\'0\']").prop('selected', true);
-				$('.resp-vk-groups').html('');
+				$("select[name=\'vk_group_id']").html('');
 				break;
 			case 'tg':
 				$("select[name=\'tg_account_id\'] option[value=\'0\']").prop('selected', true);
@@ -281,179 +267,68 @@
 
 	/*
 	|--------------------------------------------------------------------------
-	| Get Groups Odnoklassniki
+	| Get Groups OK, VK, FB
 	|--------------------------------------------------------------------------
 	|
 	*/
-	function getOkGroups() {
-
-		let ok_selected = $("select[name=\'ok_account_id\'] :selected");
-
-		let ok_account_id = ok_selected.val();
-		let ok_access_token = ok_selected.attr('data-token');
-		let group_id = '{{project.ok_group_id }}';
-
-		if (ok_account_id != '0') {
+	function getGroups(account_id, callback, old_value) {
+		if (account_id != '0') {
 			$.ajax({
-				url: '{{ group_links.ok_groups }}',
-				type: 'post',
-				data: { access_token : ok_access_token, group_id : group_id},
+				url: 'https://smm-posting.ru/api/v2/smmposting/get_groups?api_token={{ api_token }}',
+				type: 'get',
+				data: { account_id : account_id, limit : 30},
 				dataType: 'json',
 				success: function(json) {
-
-					if (json['options']) {
-						$('.label-ok-groups').removeClass('hidden');
-						$('.js-ok-group-loader').addClass('hidden');
-						$('.resp-ok-groups').html(json['options']);
+					if (json['result'] && json['error'] == "N") {
+						let html = '';
+						$.each(json['result'], function(index, value) {
+							let selected = index == old_value ? "selected" : "";
+							html += '<option ' + selected + ' value="' + index + '">' + value + ''
+						});
+						$("#" + callback).html(html);
+					} else if (json['result'] && json['error'] == "Y") {
 					}
-
-					if (json['error'] && json['error'] != 'N') {
-						$('.js-ok-group-loader').addClass('hidden');
-						$('.js-alert-ok').removeClass('hidden');
-						$('.js-alert-ok').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
-					}
-
 				}
 			});
 		} else {
-			$('.js-ok-group-loader').addClass('hidden');
-			$('.resp-ok-groups').html('');
-			$('.js-alert-ok').addClass('hidden');
 		}
 
 	}
 
-	$('select[name=\'ok_account_id\']').on('change',(function(e) {
-		$('.js-ok-group-loader').removeClass('hidden');
-		getOkGroups();
+	$('.js-account').on('change',(function(e) {
+		let account_id = $(this).val(), callback = $(this).data('callback'), old_value = $('#'+callback).val();
+		getGroups(account_id,callback, old_value);
 	}));
-
-
-	{% if project.ok_group_id %}
-	$( document ).ready(function() {
-		$('.js-ok-group-loader').removeClass('hidden');
-		getOkGroups();
-	});
-	{% endif %}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Get Groups Vkontakte
-	|--------------------------------------------------------------------------
-	|
-	*/
-
-	function getVkGroups() {
-		let vk_selected = $("select[name=\'vk_account_id\'] :selected");
-
-		let vk_account_id = vk_selected.val(),
-				access_token = vk_selected.attr('data-token'),
-				vk_user_id = vk_selected.attr('data-vk_user_id'),
-				group_id = "{{project.vk_group_id }}";
-
-		if (vk_account_id != '0') {
-			$.ajax({
-				url: '{{ group_links.vk_groups }}',
-				type: 'post',
-				data: { vk_account_id : vk_account_id, group_id : group_id, access_token : access_token, vk_user_id : vk_user_id},
-				dataType: 'json',
-				success: function(json) {
-
-					if (json['options']) {
-						$('.label-vk-groups').removeClass('hidden');
-						$('.js-vk-group-loader').addClass('hidden');
-						$('.resp-vk-groups').html(json['options']);
-					}
-
-					if (json['error']) {
-						$('.js-vk-group-loader').addClass('hidden');
-						$('.js-alert-vk').removeClass('hidden');
-						$('.js-alert-vk').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
-					}
-
-				}
-			});
-		} else {
-			$('.js-vk-group-loader').addClass('hidden');
-			$('.resp-vk-groups').html('');
-			$('.js-alert-vk').addClass('hidden')
-		}
-	}
-
-	$('select[name=\'vk_account_id\']').on('change',(function(e) {
-		$('.js-vk-group-loader').removeClass('hidden');
-		getVkGroups();
-	}));
-
-
-	{% if project.vk_group_id %}
-	$( document ).ready(function() {
-		$('.js-vk-group-loader').removeClass('hidden');
-		getVkGroups();
-	});
-	{% endif %}
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| Get Groups Facebook
-	|--------------------------------------------------------------------------
-	|
-	*/
-
-	function getFbGroups() {
-		let fb_selected = $("select[name=\'fb_account_id\'] :selected");
-
-		let fb_account_id = fb_selected.val(),
-				access_token = fb_selected.attr('data-token'),
-				fb_user_id = fb_selected.attr('data-fb_user_id'),
-				group_id = "{{project.fb_group_id }}";
-
-		if (fb_account_id != '0') {
-			$.ajax({
-				url: '{{ group_links.fb_groups }}',
-				type: 'post',
-				data: { fb_account_id : fb_account_id, group_id : group_id, access_token : access_token, fb_user_id : fb_user_id},
-				dataType: 'json',
-				success: function(json) {
-
-					if (json['options']) {
-						$('.label-fb-groups').removeClass('hidden');
-						$('.js-fb-group-loader').addClass('hidden');
-						$('.resp-fb-groups').html(json['options']);
-					}
-
-					if (json['error']) {
-						$('.js-fb-group-loader').addClass('hidden');
-						$('.js-alert-fb').removeClass('hidden');
-						$('.js-alert-fb').html('<button type="button" class="close" data-dismiss="alert">&times;</button>' + json['error']);
-					}
-
-				}
-			});
-		} else {
-			$('.js-fb-group-loader').addClass('hidden');
-			$('.resp-fb-groups').html('');
-			$('.js-alert-fb').addClass('hidden')
-		}
-	}
-
-	$('select[name=\'fb_account_id\']').on('change',(function(e) {
-		$('.js-fb-group-loader').removeClass('hidden');
-		getFbGroups();
-	}));
-
-
-	{% if project.fb_group_id %}
-	$( document ).ready(function() {
-		$('.js-fb-group-loader').removeClass('hidden');
-		getFbGroups();
-	});
-	{% endif %}
-
-
-
 </script>
+
+{% if (project["ok_group_id"] is defined and project['ok_account_id'] is defined) %}
+	<script>
+		$( document ).ready(function() {
+			let account_id = '{{ project["ok_account_id"] }}', callback = "ok_group_id", old_value = '{{ project["ok_group_id"] }}';
+			getGroups(account_id,callback, old_value);
+		});
+	</script>
+{% endif %}
+
+{% if (project["vk_group_id"] is defined and project['vk_account_id'] is defined) %}
+	<script>
+		$( document ).ready(function() {
+			let account_id = '{{ project["vk_account_id"] }}', callback = "vk_group_id", old_value = '{{ project["vk_group_id"] }}';
+			getGroups(account_id,callback, old_value);
+		});
+	</script>
+{% endif %}
+
+{% if (project["fb_group_id"] is defined and project['fb_account_id'] is defined) %}
+	<script>
+		$( document ).ready(function() {
+			let account_id = '{{ project["fb_account_id"] }}', callback = "fb_group_id", old_value = '{{ project["fb_group_id"] }}';
+			getGroups(account_id,callback, old_value);
+		});
+	</script>
+{% endif %}
+
+
 
 {{ footer }}
 

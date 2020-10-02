@@ -271,7 +271,7 @@ class ControllerMarketingSmmposting extends Controller {
 		$limit = isset($this->request->get['limit']) ? $this->request->get['limit'] : 10;
 
 		$connected_accounts = $this->smmposting->api('connected_accounts',['page'=>$page, 'limit'=>$limit]);
-		$count = isset($connected_accounts->count) ? $connected_accounts->count : 0;
+		$data['count'] = $count = isset($connected_accounts->count) ? $connected_accounts->count : 0;
 		$connected_accounts = isset($connected_accounts->result) ? $connected_accounts->result : [];
 		$data['accounts'] = json_decode(json_encode($connected_accounts), true);
 
@@ -342,6 +342,9 @@ class ControllerMarketingSmmposting extends Controller {
 			}
 			if (isset($request['media']) && count($request['media']) > 5) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_4');
+			}
+			if (!isset($request['media'])) {
+				$this->session->data['error_warning'] = $this->language->get('smmposting_error_15');
 			}
 			if (!is_numeric($request['project_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_5');
@@ -439,8 +442,6 @@ class ControllerMarketingSmmposting extends Controller {
 			$data = array_replace($data, $this->session->data['old']);
 			unset($this->session->data['old']);
 		}
-
-
 
 		if (version_compare(VERSION, '3.0.0') >= 0) {
 			$this->response->setOutput($this->load->view('marketing/smmposting/post', $data));
@@ -638,7 +639,7 @@ class ControllerMarketingSmmposting extends Controller {
 		}
 
 		//	Send to SMMposting Get Connected Accounts
-		$connected_accounts = $this->smmposting->api('connected_accounts');
+		$connected_accounts = $this->smmposting->api('connected_accounts',['limit'=>100]);
 		$connected_accounts = isset($connected_accounts->result) ? $connected_accounts->result : [];
 		$connected_accounts = json_decode(json_encode($connected_accounts), true);
 

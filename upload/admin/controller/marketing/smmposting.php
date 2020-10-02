@@ -453,13 +453,13 @@ class ControllerMarketingSmmposting extends Controller {
 		}
 
 		//	HIDE SOCIALS AFTER OLD DATA
-		$data['hide_ok'] = (!in_array("ok",$data['post']['allowed']));
-		$data['hide_vk'] = (!in_array("vk",$data['post']['allowed']));
-		$data['hide_tg'] = (!in_array("tg",$data['post']['allowed']));
-		$data['hide_ig'] = (!in_array("ig",$data['post']['allowed']));
-		$data['hide_fb'] = (!in_array("fb",$data['post']['allowed']));
-		$data['hide_tw'] = (!in_array("tw",$data['post']['allowed']));
-		$data['hide_tb'] = (!in_array("tb",$data['post']['allowed']));
+		$data['hide_ok'] = (isset($data['post']['allowed']) && !in_array("ok",$data['post']['allowed']));
+		$data['hide_vk'] = (isset($data['post']['allowed']) && !in_array("vk",$data['post']['allowed']));
+		$data['hide_tg'] = (isset($data['post']['allowed']) && !in_array("tg",$data['post']['allowed']));
+		$data['hide_ig'] = (isset($data['post']['allowed']) && !in_array("ig",$data['post']['allowed']));
+		$data['hide_fb'] = (isset($data['post']['allowed']) && !in_array("fb",$data['post']['allowed']));
+		$data['hide_tw'] = (isset($data['post']['allowed']) && !in_array("tw",$data['post']['allowed']));
+		$data['hide_tb'] = (isset($data['post']['allowed']) && !in_array("tb",$data['post']['allowed']));
 
 
 		if (version_compare(VERSION, '3.0.0') >= 0) {

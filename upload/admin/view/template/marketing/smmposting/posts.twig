@@ -8,79 +8,72 @@
     </div>
 
     <div class="smmposting-container">
+        {% if (error_warning) %}
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        {% if (success) %}
+            <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+
         <div class="row">
-            {% if posts %}
-                <div class="col-sm-12 clearfix">
-                    <div class="pull-right">
-                        <a href="{{ add_post_link }}" style="margin-bottom:2rem;" class="btn btn-success btn-md"><i class="fa fa-plus"></i> <span class="hidden-xs">{{ button_add_post }}</span></a>
-                    </div>
-                </div>
-            {% endif %}
-            <div class="col-sm-12">
-                {% if posts %}
-                    {% for post in posts %}
-                        <div class="col-12 col-md-6 col-lg-3">
-                            <div class="card">
-                            {% if post.image %}
-                            <a href="{{ edit_post_link }}&id={{ post.post_id }}">
-                                <img class="card-img-top" src="{{ post.image }}">
-                            </a>
+            <div class="pull-right">
+                <a href="{{ add_post_link }}" style="margin-bottom:2rem;" class="btn btn-success btn-md"><i class="fa fa-plus"></i> <span class="hidden-xs">{{ button_add_post }}</span></a>
+            </div>
+        </div>
+
+        <div class="row row-flex">
+            {% if (posts is defined) %}
+                {% for post in posts %}
+                    <div class="сol-md-3 col-lg-3">
+                        <div class="card">
+                            {% if (post['image']) %}
+                                <a href="{{ edit_post_link }}&id={{ post['post_id'] }}">
+                                    <img class="card-img-top" src="{{ post['image'] }}">
+                                </a>
                             {% endif %}
 
                             <div class="card-header px-4 pt-4">
 
-                                <h5 class="card-title mb-0">{{ post.project_name }}</h5>
+                                <h5 class="card-title mb-0">{{ post['project_name'] }}</h5>
                                 <div class="clearfix mt-2">
-                                    {% if post.status ==  0 %}<span class="label label-warning">{{ text_status_0 }}</span>{% endif %}
-                                    {% if post.status ==  1 %}<span class="label label-success">{{ text_status_1 }}</span>{% endif %}
-                                    {% if post.status ==  2 %}<span class="label label-danger">{{ text_status_2 }}</span>{% endif %}
-                                    {% if post.status ==  3 %}<span class="label label-primary">{{ text_status_3 }}</span>{% endif %}
+                                    {% if (post['status'] == 0) %}<span class="label label-warning">{{ text_status_0 }}</span>{% endif %}
+                                    {% if (post['status'] == 1) %}<span class="label label-success">{{ text_status_1 }}</span>{% endif %}
+                                    {% if (post['status'] == 2) %}<span class="label label-danger">{{ text_status_2 }}</span>{% endif %}
+                                    {% if (post['status'] == 3) %}<span class="label label-primary">{{ text_status_3 }}</span>{% endif %}
                                 </div>
 
                                 <div class="clearfix mt-2">
                                     <small class="resp-quick-export d-flex">{{ text_time_publications }}</small>
-                                    <strong>{{ post.date_public }} ({{ post.time_public }})</strong>
+                                    <strong>{{ post['date_public'] }}</strong>
                                 </div>
                             </div>
                             <div class="card-body">
-                                {{ post.content}}
+                                {{ post['content'] }}
                                 <hr>
-                                <small class="resp-quick-export mb-4">{{ text_quick_post }}</small>
                                 <div class="d-flex">
-                                    <a onclick="QuickPost('{{ post.post_id }}','vkontakte', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-vk"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','odnoklassniki', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-odnoklassniki"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','telegram', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-send"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','facebook', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-facebook"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','instagram', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-instagram"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','tumblr', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-tumblr"></i>
-                                    </a>
-                                    <a onclick="QuickPost('{{ post.post_id }}','twitter', this)" class="btn btn-success social text-white mr-1 mb-1">
-                                        <i class="fa fa-twitter"></i>
-                                    </a>
+                                    {% if (post['vk']) %}<a onclick="QuickPost('{{ post["post_id"] }}','vk', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-vk"></i></a>{% endif %}
+                                    {% if (post['ok']) %}<a onclick="QuickPost('{{ post["post_id"] }}','ok', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-odnoklassniki"></i></a>{% endif %}
+                                    {% if (post['tg']) %}<a onclick="QuickPost('{{ post["post_id"] }}','tg', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-send"></i></a>{% endif %}
+                                    {% if (post['fb']) %}<a onclick="QuickPost('{{ post["post_id"] }}','fb', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-facebook"></i></a>{% endif %}
+                                    {% if (post['ig']) %}<a onclick="QuickPost('{{ post["post_id"] }}','ig', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-instagram"></i></a>{% endif %}
+                                    {% if (post['tb']) %}<a onclick="QuickPost('{{ post["post_id"] }}','tb', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-tumblr"></i></a>{% endif %}
+                                    {% if (post['tw']) %}<a onclick="QuickPost('{{ post["post_id"] }}','tw', this)" class="btn btn-success social text-white mr-1 mb-1"><i class="fa fa-twitter"></i></a>{% endif %}
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-8"> <a class="btn btn-info w-100" href="{{ edit_post_link }}&id={{ post.post_id }}"><i class="fa fa-eye"></i> {{ text_preview }}</a></div>
-                                    <div class="col-sm-4"> <a class="btn btn-danger w-100" href="{{ delete_post_link }}&id={{ post.post_id }}"><i class="fa fa-trash"></i></a></a></div>
+                                    <div class="col-sm-8"> <a class="btn btn-info w-100" href="{{ edit_post_link }}&id={{ post['post_id'] }}"><i class="fa fa-eye"></i> {{ text_preview }}</a></div>
+                                    <div class="col-sm-4"> <a class="btn btn-danger w-100" href="{{ delete_post_link }}&id={{ post['post_id'] }}"><i class="fa fa-trash"></i></a></a></div>
                                 </div>
 
                             </div>
                         </div>
-                        </div>
-                    {% endfor %}
-
-                {% else %}
+                    </div>
+                {% endfor %}
+            {% else %}
                 <div class="text-center">
                     <div class="row">
                         <a href="{{ add_post_link }}" title="{{ button_add_post }}">
@@ -90,9 +83,12 @@
 
                     <a href="{{ add_post_link }}" style="margin-bottom:2rem;" class="btn btn-success btn-md"><i class="fa fa-plus"></i> <span class="hidden-xs">{{ button_add_post }}</span></a>
                 </div>
-                {% endif %}
-            </div>
+            {% endif %}
+        </div>
 
+        <div class="row">
+            <div class="col-sm-6 text-left">{{ pagination }}</div>
+            <div class="col-sm-6 text-right">{{ results }}</div>
         </div>
     </div>
 </div>
@@ -111,21 +107,21 @@
         }).then(result => {
             if (result.value) {
                 $.ajax({
-                    url: '{{ send_link }}&post_id='+post_id+'&social='+social,
+                    url: 'https://smm-posting.ru/api/v2/smmposting/publish_post/'+post_id+'?api_token='+ "{{ api_token }}",
                     type: 'post',
-                    data: 'post_id='+post_id+'&social='+social,
+                    data: 'social='+social,
                     dataType: 'json',
                     success: function(json) {
-                        if (json['result'][post_id][social]['success']) {
+                        if (json['result']['success']) {
                             Swal.fire(
                                 '{{ text_successfull_published }}',
-                                '<a target="_blank" href="' +json['result'][post_id][social]['success'] + '">'+json['result'][post_id][social]['success'] + '</a>',
+                                '<a target="_blank" href="' +json['result']['success'] + '">'+json['result']['success'] + '</a>',
                                 'success'
                             )
                         } else {
                             Swal.fire(
                                 '{{ text_error_export }}',
-                                json['error'],
+                                json['result']['error_text'],
                                 'error'
                             )
                         }

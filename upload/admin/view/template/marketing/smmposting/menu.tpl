@@ -16,10 +16,9 @@
 
 
 <a href="<?php echo $posts_link; ?>"    class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/posts'    ? 'info' : 'primary');?> btn-md"><i class="fa fa-send fa-fw"></i> <span class="hidden-xs"><?php echo $text_posts; ?></span></a>
-<a href="<?php echo $products_link; ?>" class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/products' ? 'info' : 'primary');?> btn-md"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs"><?php echo $text_products; ?></span></a>
 <a href="<?php echo $accounts_link; ?>" class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/accounts' ? 'info' : 'primary');?> btn-md"><i class="fa fa-users"></i> <span class="hidden-xs"><?php echo $text_accounts; ?></span></a>
 <a href="<?php echo $project_list; ?>"  class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/projects' ? 'info' : 'primary');?> btn-md"><i class="fa fa-briefcase"></i> <span class="hidden-xs"><?php echo $text_projects; ?></span></a>
-<a href="<?php echo $settings; ?>"      class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/settings' ? 'info' : 'primary');?> btn-md"><i class="fa fa-cog fa-fw"></i> <span class="hidden-xs"><?php echo $text_settings; ?></span></a>
+<a href="<?php echo $contact_link; ?>"  class="btn btn-<?php echo ($_GET['route'] == 'marketing/smmposting/contact' ? 'info' : 'primary');?> btn-md"><i class="fa fa-quote-right fa-fw"></i> <span class="hidden-xs"><?php echo $text_contacts; ?></span></a>
 
 
 <?php if (isset($remain_to_pay)) { ?>
@@ -28,7 +27,7 @@
         icon: 'warning',
         title: 'Внимание!',
         text: 'До момента оплаты осталось дней: <?php echo $remain_to_pay; ?>',
-        footer: '<a href="https://smm-posting.ru/tariffs">Оплатить прямо сейчас</a>',
+        footer: '<a href="https://smm-posting.ru/tariffs">Оплатить прямо сейчас?</a>',
     })
 </script>
 <?php } ?>

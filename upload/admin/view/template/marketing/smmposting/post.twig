@@ -9,13 +9,13 @@
 
     <div class="smmposting-container">
 
-        {% if error_warning %}
+        {% if (error_warning) %}
             <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
         {% endif %}
 
-        {% if success %}
+        {% if (success) %}
             <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
@@ -36,144 +36,131 @@
             </div>
             <div class="panel-body">
                 <form method="post" enctype="multipart/form-data" class="dropzone" id="dropzone" action="./index.php?route=marketing/smmposting/uploadImage&{{ token_to_link }}">
-                    {% if images is not empty %}
-                        {% for key, item in images %}
+
+                    {% if (post.media is defined and post.media|length >0) %}
+                        {% for key,item in post['media'] %}
                             <div class="dz-preview dz-processing dz-image-preview dz-complete">
                                 <div class="dz-image">
-                                    <img style="height: 120px;width: 120px;object-fit: cover;" alt="{{ item.image}}" data-dz-thumbnail="" src="/image/{{ item.image }}">
+                                    <img style="height: 120px;width: 120px;object-fit: cover;" data-dz-thumbnail="{{ item }}" src="{{ item }}">
                                 </div>
                                 <div class="dz-details">
-                                    <div class="dz-filename"> <span data-dz-name="">{{ item.image }}</span></div>
+                                    <div class="dz-filename"> <span data-dz-name="">{{ item }}</span></div>
                                 </div>
-                                <a data-delete_file_id="image_id_key{{ key }}" class="dz-remove del_button" data-filename="{{ item.image }}">{{ text_delete }}</a>
+                                <a data-delete_file_id="image_id_key{{ key }}" class="dz-remove del_button" data-filename="{{ item }}">{{ text_delete }}</a>
                             </div>
-                        {% endfor %}{% endif %}
-                    <div class="dz-default dz-message hidden"><i class="fa fa-upload"></i> {{ text_move_image }}</div>
-
+                        {% endfor %}
+                        <div class="dz-default dz-message hidden"><i class="fa fa-upload"></i> {{ text_move_image }}</div>
+                    {% endif %}
                 </form>
                 <hr>
                 <form id="form-smmposting" action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-post">
                             <div class="hiddens">
-                                {% if images %}
-                                    {% for key, item in images %}
-                                        <input type="hidden" class="form-control image_id_key{{ key }}" name="images[]" value="{{ item.image }}" />
-                                    {% endfor %}{% endif %}
-
+                                {% if (post.media is defined and  post.media|length >0) %}
+                                    {% for key,item in post.media %}
+                                        <input type="hidden" class="form-control image_id_key{{ key }}" name="media[]" value="{{ item }}" />
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label class="control-label">{{ text_description }}</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <textarea  class="form-control"  name="smmposting_post[content]" rows="10" cols="10">{% if post.content %} {{ post.content }} {% endif %}</textarea>
+                                            <textarea id="smmposting_content" class="form-control"  name="content" rows="10" cols="10">{% if (post['content'] is defined) %} {{ post['content'] }}{% endif %}</textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label">{{ text_select_project }}</label>
-                                        <select class="form-control" name="smmposting_post[project_id]" id="project_id">
+                                        <select class="form-control" name="project_id" id="project_id">
                                             <option value="*">{{ text_select_project }}</option>
                                             {% for project in projects %}
-                                            <option
-                                                    data-ok="{{ project.ok_account_id }}"
-                                                    data-vk="{{ project.vk_account_id }}"
-                                                    data-tg="{{ project.tg_account_id }}"
-                                                    data-ig="{{ project.ig_account_id }}"
-                                                    data-fb="{{ project.fb_account_id }}"
-                                                    data-tb="{{ project.tb_account_id }}"
-                                                    data-tw="{{ project.tw_account_id }}"
-                                                    value="{{ project.project_id }}"
-                                                    {% if post.project_id is defined %} {% if project.project_id  ==  post.project_id %}
-                                                    selected
-                                                    {% endif %}{% endif %}>
-                                                {{ project.project_name }}
-                                            </option>
+                                                <option value="{{ project['id'] }}" {% if (post['project_id'] is defined and project['id'] == post['project_id']) %}selected{% endif %}>
+                                                    {{ project['name'] }}
+                                                </option>
                                             {% endfor %}
                                         </select>
-                                        <span class="product-arrow-up" {% if post.project_id %}style="display: none" {% endif %}><i></i>
+                                        <span class="product-arrow-up" {% if (post['project_id'] is defined) %}style="display: none" {% endif %}><i></i>
                                         <em class="js-qnt">{{ text_dont_forget_select_a_project }}</em></span>
                                     </div>
-                                    <div class="form-group row fg-soc fg-ok" {% if not show_ok %}style="display: none"{% endif %}>
+
+                                    <select multiple="multiple" name="allowed[]" class="hidden form-control">
+                                        {% for soc in post.allowed %}
+                                            <option selected value="{{ soc }}">{{ soc }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <div class="form-group row fg-soc fg-ok" {% if hide_ok %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[odnoklassniki]" value="0">
-                                                <input type="checkbox" {% if post.odnoklassniki is defined and post.odnoklassniki !=0 %} checked {% endif %} value="1"  id="odnoklassniki" name="smmposting_post[odnoklassniki]" class="custom-control-input checkbox-social">
-                                                <label class="custom-control-label" for="odnoklassniki"> {{ text_ok }}</label>
+                                                <input type="checkbox" {{ (post.socials is defined and "ok" in post.socials ? "checked" : "") }} value="ok"  id="ok" name="socials[]" class="custom-control-input checkbox-social">
+                                                <label class="custom-control-label" for="ok"> {{ text_ok }}</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row fg-soc fg-vk" {% if not show_vk %} style="display: none"  {% endif %}>
+                                    <div class="form-group row fg-soc fg-vk" {% if hide_vk %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[vkontakte]" value="0">
-                                                <input type="checkbox" {% if post.vkontakte is defined and post.vkontakte !=0 %} checked {% endif %} value="1"  id="vkontakte" name="smmposting_post[vkontakte]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "vk" in post.socials ? "checked" : "") }} value="vk"  id="vk" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="vkontakte"> {{ text_vk }}</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group row fg-soc fg-tg" {% if not show_tg %}style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-tg" {% if hide_tg %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[telegram]" value="0">
-                                                <input type="checkbox" {% if post.telegram is defined and post.telegram !=0 %} checked {% endif %} value="1" id="telegram" name="smmposting_post[telegram]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "tg" in post.socials ? "checked" : "") }} value="tg" id="tg" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="telegram"> {{ text_tg }}</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group row fg-soc fg-ig" {% if not show_ig %}style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-ig" {% if hide_ig %} style="display: none"  {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[instagram]" value="0">
-                                                <input type="checkbox" {% if post.instagram is defined and post.instagram !=0 %} checked {% endif %} value="1" id="instagram" name="smmposting_post[instagram]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "ig" in post.socials ? "checked" : "") }} value="ig" id="ig" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="telegram"> {{ text_ig }}</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group row fg-soc fg-fb" {% if not show_fb %}style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-fb" {% if hide_fb %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[facebook]" value="0">
-                                                <input type="checkbox" {% if post.facebook is defined and post.facebook !=0 %} checked {% endif %} value="1" id="facebook" name="smmposting_post[facebook]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "fb" in post.socials ? "checked" : "") }} value="fb" id="fb" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="facebook"> {{ text_fb }}</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group row fg-soc fg-tb" {% if not show_tb %}style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-tb" {% if hide_tb %} style="display: none"  {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[tumblr]" value="0">
-                                                <input type="checkbox" {% if post.tumblr is defined and post.tumblr !=0 %} checked {% endif %} value="1" id="tumblr" name="smmposting_post[tumblr]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "tb" in post.socials ? "checked" : "") }} value="tb" id="tb" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="tumblr"> {{ text_tb }}</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group row fg-soc fg-tw" {% if not show_tw %}style="display: none" {% endif %}>
+                                    <div class="form-group row fg-soc fg-tw" {% if hide_tw %} style="display: none" {% endif %}>
                                         <div class="col-sm-12">
                                             <div class="mb-2 custom-checkbox custom-control input-group">
-                                                <input type="hidden" name="smmposting_post[twitter]" value="0">
-                                                <input type="checkbox" {% if post.twitter is defined and post.twitter !=0 %} checked {% endif %} value="1" id="twitter" name="smmposting_post[twitter]" class="custom-control-input checkbox-social">
+                                                <input type="checkbox" {{ (post.socials is defined and "tw" in post.socials ? "checked" : "") }} value="tw" id="tw" name="socials[]" class="custom-control-input checkbox-social">
                                                 <label class="custom-control-label" for="twitter"> {{ text_tw }}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
                                 <div class="col-sm-12">
                                     <label class="control-label">{{ text_status }}</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <select class="form-control js-select" name="smmposting_post[status]">
-                                                <option value="0" {% if post.status is defined and post.status == 0 %}selected="selected"{% endif %}>{{ text_status_0 }}</option>
-                                                <option value="1" {% if post.status is defined and post.status == 1 %}selected="selected"{% endif %}>{{ text_status_1 }}</option>
-                                                <option value="2" {% if post.status is defined and post.status == 2 %}selected="selected"{% endif %}>{{ text_status_2 }}</option>
-                                                <option value="3" {% if post.status is defined and post.status == 3 %}selected="selected"{% endif %}>{{ text_status_3 }}</option>
+                                            <select class="form-control js-select" name="status">
+                                                <option value="0" {% if (post['status'] is defined and post['status'] == 0) %}selected="selected"{% endif %}>{{ text_status_0 }}</option>
+                                                <option value="1" {% if (post['status'] is defined and post['status'] == 1) %}selected="selected"{% endif %}>{{ text_status_1 }}</option>
+                                                <option value="2" {% if (post['status'] is defined and post['status'] == 2) %}selected="selected"{% endif %}>{{ text_status_2 }}</option>
+                                                <option value="3" {% if (post['status'] is defined and post['status'] == 3) %}selected="selected"{% endif %}>{{ text_status_3 }}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -182,7 +169,7 @@
                                     <label class="control-label">{{ text_date_publications }}</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <input id="date_public" type="date" class="form-control" name="smmposting_post[date_public]" value="{% if post.date_public is defined %}{{ post.date_public }}{% endif %}">
+                                            <input id="date_public" type="date" class="form-control" name="date_public" value="{{ post['date_public'] }}">
                                             <span class="dated" id="date_today">{{ text_today }}</span> | <span id="date_tomorrow" class="dated">{{ text_tomorrow }}</span> | <span id="date_after_tomorrow" class="dated">{{ text_after_tomorrow }}</span>
                                         </div>
                                     </div>
@@ -191,7 +178,32 @@
                                     <label class="control-label">{{ text_time_publications }}</label>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <input id="time_input" type="time" class="form-control" name="smmposting_post[time_public]" value="{% if post.time_public is defined %}{{ post.time_public }}{% endif %}">
+                                            <select id="time_public" name="time_public" class="form-control">
+                                                <option value="7"  {% if (post['time_public'] is defined and post['time_public'] == 7) %} selected {% endif %}>07:00</option>
+                                                <option value="8"  {% if (post['time_public'] is defined and post['time_public'] == 8) %} selected {% endif %}>08:00</option>
+                                                <option value="9"  {% if (post['time_public'] is defined and post['time_public'] == 9) %} selected {% endif %}>09:00</option>
+                                                <option value="10" {% if (post['time_public'] is defined and post['time_public'] == 10) %} selected {% endif %}>10:00</option>
+                                                <option value="11" {% if (post['time_public'] is defined and post['time_public'] == 11) %} selected {% endif %}>11:00</option>
+                                                <option value="12" {% if (post['time_public'] is defined and post['time_public'] == 12) %} selected {% endif %}>12:00</option>
+                                                <option value="13" {% if (post['time_public'] is defined and post['time_public'] == 13) %} selected {% endif %}>13:00</option>
+                                                <option value="14" {% if (post['time_public'] is defined and post['time_public'] == 14) %} selected {% endif %}>14:00</option>
+                                                <option value="15" {% if (post['time_public'] is defined and post['time_public'] == 15) %} selected {% endif %}>15:00</option>
+                                                <option value="16" {% if (post['time_public'] is defined and post['time_public'] == 16) %} selected {% endif %}>16:00</option>
+                                                <option value="17" {% if (post['time_public'] is defined and post['time_public'] == 17) %} selected {% endif %}>17:00</option>
+                                                <option value="18" {% if (post['time_public'] is defined and post['time_public'] == 18) %} selected {% endif %}>18:00</option>
+                                                <option value="19" {% if (post['time_public'] is defined and post['time_public'] == 19) %} selected {% endif %}>19:00</option>
+                                                <option value="20" {% if (post['time_public'] is defined and post['time_public'] == 20) %} selected {% endif %}>20:00</option>
+                                                <option value="21" {% if (post['time_public'] is defined and post['time_public'] == 21) %} selected {% endif %}>21:00</option>
+                                                <option value="22" {% if (post['time_public'] is defined and post['time_public'] == 22) %} selected {% endif %}>22:00</option>
+                                                <option value="23" {% if (post['time_public'] is defined and post['time_public'] == 23) %} selected {% endif %}>23:00</option>
+                                                <option value="0"  {% if (post['time_public'] is defined and post['time_public'] == 0) %} selected {% endif %}>00:00</option>
+                                                <option value="1"  {% if (post['time_public'] is defined and post['time_public'] == 1) %} selected {% endif %}>01:00</option>
+                                                <option value="2"  {% if (post['time_public'] is defined and post['time_public'] == 2) %} selected {% endif %}>02:00</option>
+                                                <option value="3"  {% if (post['time_public'] is defined and post['time_public'] == 3) %} selected {% endif %}>03:00</option>
+                                                <option value="4"  {% if (post['time_public'] is defined and post['time_public'] == 4) %} selected {% endif %}>04:00</option>
+                                                <option value="5"  {% if (post['time_public'] is defined and post['time_public'] == 5) %} selected {% endif %}>05:00</option>
+                                                <option value="6"  {% if (post['time_public'] is defined and post['time_public'] == 6) %} selected {% endif %}>06:00</option>
+                                            </select>
                                             <span class="dated" id="time_1">{{ text_time_1 }}</span> | <span id="time_2" class="dated">{{ text_time_2 }}</span> | <span id="time_3" class="dated">{{ text_time_3 }}</span>
                                         </div>
                                     </div>
@@ -199,54 +211,49 @@
                             </div>
                         </div>
                     </div>
-            </div>
-            </form>
+                </form>
         </div>
     </div>
 </div>
-<script>
-//Дни публикации
-var today = '{{ date_today }}';
-var tomorrow = '{{ date_tomorrow }}';
-var after_tommorrow = '{{ date_after_tommorrow }}';
 
-$("#date_today").click(function () {
-document.getElementById('date_public').value = today;
-});
+<script type="text/javascript">
+    const today = "{{ date_today }}";
+    const tomorrow = "{{ date_tomorrow }}";
+    const after_tommorrow = '{{ date_after_tommorrow }}';
+    const time_1 = '9';
+    const time_2 = '14';
+    const time_3 = '18';
 
-$("#date_tomorrow").click(function () {
-document.getElementById('date_public').value = tomorrow;
-});
+    $("#date_today").click(function () {
+        document.getElementById('date_public').value = today;
+    });
 
-$("#date_after_tomorrow").click(function () {
-document.getElementById('date_public').value = after_tommorrow;
-});
+    $("#date_tomorrow").click(function () {
+        document.getElementById('date_public').value = tomorrow;
+    });
 
-//Время публикации
+    $("#date_after_tomorrow").click(function () {
+        document.getElementById('date_public').value = after_tommorrow;
+    });
 
+    $("#time_1").click(function () {
+        $('#time_public').val(time_1).change();
+    });
 
-var time_1 = '09:00';
-var time_2 = '14:00';
-var time_3 = '18:00';
+    $("#time_2").click(function () {
+        $('#time_public').val(time_2).change();
+    });
 
-$("#time_1").click(function () {
-document.getElementById('time_input').value = time_1;
-});
-
-$("#time_2").click(function () {
-document.getElementById('time_input').value = time_2;
-});
-
-$("#time_3").click(function () {
-document.getElementById('time_input').value = time_3;
-});
+    $("#time_3").click(function () {
+        $('#time_public').val(time_3).change();
+    });
 
 </script>
 
 <script type="text/javascript" src="view/javascript/ckeditor_smm/ckeditor.js"></script>
 <script type="text/javascript"><!--
     CKEDITOR.addCss('.cke_editable p { margin: 0 !important; }');
-    CKEDITOR.replace('smmposting_post[content]', {
+    CKEDITOR.replace('smmposting_content', {
         toolbar : 'Full',
     });
     //--></script>
@@ -264,6 +271,7 @@ document.getElementById('time_input').value = time_3;
             dictRemoveFile: "{{ text_dictRemoveFile }}",
             dictRemoveFileConfirmation: null,
             dictMaxFilesExceeded: "{{ text_dictMaxFilesExceeded }}",
+
             maxFiles: 10,
             maxFilesize: 6,
             renameFile: function(file) {
@@ -293,8 +301,8 @@ document.getElementById('time_input').value = time_3;
 
             success: function(file, response)
             {
-                if (response['path_file']) {
-                    $('.hiddens').append('<input type="hidden" id="'+file.upload.uuid+'" name="images[]" value="'+response['path_file']+'">');
+                if (response['preview_image']) {
+                    $('.hiddens').append('<input type="hidden" id="'+file.upload.uuid+'" name="media[]" value="'+response['preview_image']+'">');
                 }
             },
             error: function(file, response)
@@ -308,43 +316,82 @@ document.getElementById('time_input').value = time_3;
     $(document).ready(function () {
         function checkProject() {
             $('.checkbox-social').prop('checked', false);
-            $('.fg-soc').fadeOut();
+            $('.fg-soc').hide();
 
-            if ($("select[name=\'smmposting_post[project_id]\'] :selected").val() != '*') {
-                $('.product-arrow-up').fadeOut();
+            if ($("select[name=\'project_id\'] :selected").val() != '*') {
+                let project_id = $("select[name=\'project_id\'] :selected").val();
+                $.ajax({
+                    url: 'https://smm-posting.ru/api/v2/smmposting/get_project/'+project_id+'?api_token='+ "{{ api_token }}",
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json['result']['allowed'] !== undefined && Array.isArray(json['result']['allowed'])) {
+                            $('.product-arrow-up').fadeOut();
 
-                let ok = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-ok');
-                let vk = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-vk');
-                let tg = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-tg');
-                let ig = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-ig');
-                let fb = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-fb');
-                let tb = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-tb');
-                let tw = $("select[name=\'smmposting_post[project_id]\'] :selected").attr('data-tw');
+                            let allowed_count = 0
+                            let allowed = json['result']['allowed'];
 
-                let show_accounts = 0
+                            //  CHANGE ALLOWED
+                            let allowed_options = '';
+                            $.each(allowed, function(index, value) {
+                                allowed_options += '<option value="'+value+'" selected>'+value+'</option>'
+                            });
+                            $("select[name=\'allowed[]\']").html(allowed_options);
+                            /////////////////
 
-                if (ok != 0) { show_accounts = 1; $("input[name=\'smmposting_post[odnoklassniki]\']").prop('checked', true); $('.fg-ok').fadeIn(); }
-                if (vk != 0) { show_accounts = 1; $("input[name=\'smmposting_post[vkontakte]\']").prop('checked', true); $('.fg-vk').fadeIn(); }
-                if (tg != 0) { show_accounts = 1; $("input[name=\'smmposting_post[telegram]\']").prop('checked', true); $('.fg-tg').fadeIn(); }
-                if (ig != 0) { show_accounts = 1; $("input[name=\'smmposting_post[instagram]']").prop('checked', true); $('.fg-ig').fadeIn(); }
-                if (fb != 0) { show_accounts = 1; $("input[name=\'smmposting_post[facebook]']").prop('checked', true); $('.fg-fb').fadeIn(); }
-                if (tb != 0) { show_accounts = 1; $("input[name=\'smmposting_post[tumblr]']").prop('checked', true); $('.fg-tb').fadeIn(); }
-                if (tw != 0) { show_accounts = 1; $("input[name=\'smmposting_post[twitter]']").prop('checked', true); $('.fg-tw').fadeIn(); }
+                            if (allowed.includes("ok")) {
+                                $('.fg-ok').show();
+                                allowed_count++;
+                                $("input[name=\'odnoklassniki\']").prop('checked', true);
+                            }
+                            if (allowed.includes("vk")) {
+                                $('.fg-vk').show();
+                                allowed_count++;
+                                $("input[name=\'vkontakte\']").prop('checked', true);
+                            }
+                            if (allowed.includes("tg")) {
+                                allowed_count++;
+                                $('.fg-tg').show();
+                                $("input[name=\'socials[tg]\']").prop('checked', true);
+                            }
+                            if (allowed.includes("ig")) {
+                                allowed_count++;
+                                $('.fg-ig').show();
+                                $("input[name=\'socials[ig]\']").prop('checked', true);
+                            }
+                            if (allowed.includes("fb")) {
+                                allowed_count++;
+                                $('.fg-fb').show();
+                                $("input[name=\'socials[fb]\']").prop('checked', true);
+                            }
+                            if (allowed.includes("tb")) {
+                                allowed_count++;
+                                $('.fg-tb').show();
+                                $("input[name=\'socials[tb]\']").prop('checked', true);
+                            }
+                            if (allowed.includes("tw")) {
+                                allowed_count++;
+                                $('.fg-tw').show();
+                                $("input[name=\'socials[tw]\']").prop('checked', true);
+                            }
 
-                if (show_accounts === '0') {
-                    Swal.fire({
-                        title: "{{ text_attention }}",
-                        text:  "{{ text_no_accounts_in_project }}",
-                        type: "warning",
-                    });
+                            if (allowed_count===0) {
+                                Swal.fire({
+                                    title: "{{ text_attention }}",
+                                    text:  "{{ text_no_accounts_in_project }}",
+                                    type: "warning",
+                                });
 
-                    $('.product-arrow-up').fadeIn();
-
-                    $('select[name=\'smmposting_post[project_id]\'] option[value="*"]').prop('selected', true)
-                }
+                                $('.product-arrow-up').fadeIn();
+                                $('select[name=\'project_id\'] option[value="*"]').prop('selected', true)
+                            }
+                        }
+                    }
+                });
             } else {
-                $('.product-arrow-up').fadeIn();
+
             }
+
         }
         $('#project_id').on('change', function (e) {
             checkProject();

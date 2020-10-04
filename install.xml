@@ -62,12 +62,6 @@
                     );
 
                     $smmposting[] = array(
-                        'name'     => $this->language->get('text_products'),
-                        'href'     => $this->url->link('marketing/smmposting/products', $token, true),
-                        'children' => array()
-                    );
-
-                    $smmposting[] = array(
                         'name'     => $this->language->get('text_projects'),
                         'href'     => $this->url->link('marketing/smmposting/projects', $token, true),
                         'children' => array()
@@ -80,8 +74,8 @@
                     );
 
                     $smmposting[] = array(
-                        'name'     => $this->language->get('text_settings'),
-                        'href'     => $this->url->link('marketing/smmposting/settings', $token, true),
+                        'name'     => $this->language->get('text_contacts'),
+                        'href'     => $this->url->link('marketing/smmposting/contact', $token, true),
                         'children' => array()
                     );
 

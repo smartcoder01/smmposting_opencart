@@ -443,7 +443,7 @@ class ControllerMarketingSmmposting extends Controller {
 		## Time
 		$data['date_today'] = date("Y-m-d");
 		$data['date_tomorrow'] = date('Y-m-d', strtotime("+1 day"));
-		$data['date_after_tommorrow'] = date('Y-m-d', strtotime("+2 day"));
+		$data['date_after_tomorrow'] = date('Y-m-d', strtotime("+2 day"));
 
 
 		//	OLD DATA
@@ -453,13 +453,13 @@ class ControllerMarketingSmmposting extends Controller {
 		}
 
 		//	HIDE SOCIALS AFTER OLD DATA
-		$data['hide_ok'] = (!in_array("ok",$data['post']['allowed']));
-		$data['hide_vk'] = (!in_array("vk",$data['post']['allowed']));
-		$data['hide_tg'] = (!in_array("tg",$data['post']['allowed']));
-		$data['hide_ig'] = (!in_array("ig",$data['post']['allowed']));
-		$data['hide_fb'] = (!in_array("fb",$data['post']['allowed']));
-		$data['hide_tw'] = (!in_array("tw",$data['post']['allowed']));
-		$data['hide_tb'] = (!in_array("tb",$data['post']['allowed']));
+		$data['hide_ok'] = (isset($data['post']['allowed']) && !in_array("ok",$data['post']['allowed']));
+		$data['hide_vk'] = (isset($data['post']['allowed']) && !in_array("vk",$data['post']['allowed']));
+		$data['hide_tg'] = (isset($data['post']['allowed']) && !in_array("tg",$data['post']['allowed']));
+		$data['hide_ig'] = (isset($data['post']['allowed']) && !in_array("ig",$data['post']['allowed']));
+		$data['hide_fb'] = (isset($data['post']['allowed']) && !in_array("fb",$data['post']['allowed']));
+		$data['hide_tw'] = (isset($data['post']['allowed']) && !in_array("tw",$data['post']['allowed']));
+		$data['hide_tb'] = (isset($data['post']['allowed']) && !in_array("tb",$data['post']['allowed']));
 
 
 		if (version_compare(VERSION, '3.0.0') >= 0) {
@@ -608,15 +608,15 @@ class ControllerMarketingSmmposting extends Controller {
 				unset($request['fb_account_id']);
 			}
 
-			if (!$request['ig_account_id']) {
+			if (isset($request['ig_account_id']) && !$request['ig_account_id']) {
 				unset($request['ig_account_id']);
 			}
 
-			if (!$request['tb_account_id']) {
+			if (isset($request['tb_account_id']) && !$request['tb_account_id']) {
 				unset($request['tb_account_id']);
 			}
 
-			if (!$request['tw_account_id']) {
+			if (isset($request['tw_account_id']) && !$request['tw_account_id']) {
 				unset($request['tw_account_id']);
 			}
 

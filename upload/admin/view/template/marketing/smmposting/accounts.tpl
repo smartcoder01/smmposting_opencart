@@ -45,7 +45,7 @@
                               <div class="alert alert-info">
                                   <?php echo $text_info_group; ?>
                               </div>
-                              <form action="<?php echo $auth_links['ok_auth_link']; ?>" method="post" id="auth_ok">
+                              <form action="<?php echo $auth_links['ok_auth_link']; ?>" method="post" >
 
                                   <input type="hidden" name="api_token" value="<?php echo $api_token; ?>">
                                   <input type="hidden" name="s" value="odnoklassniki">
@@ -60,7 +60,7 @@
                               <div class="alert alert-info">
                                   <?php echo $text_info_group; ?>
                               </div>
-                              <form action="<?php echo $auth_links['vk_auth_link']; ?>" method="post" id="auth_ok">
+                              <form action="<?php echo $auth_links['vk_auth_link']; ?>" method="post" >
                                   <input type="hidden" name="server_link" value="<?php echo $server_link; ?>&s=vk">
                                   <input type="hidden" name="api_token" value="<?php echo $api_token; ?>">
                                   <input type="hidden" name="s" value="vkontakte">
@@ -115,7 +115,7 @@
                               <div class="alert alert-info">
                                   <?php echo $text_info_group; ?>
                               </div>
-                              <form action="<?php echo $auth_links['fb_auth_link']; ?>" method="post" id="auth_ok">
+                              <form action="<?php echo $auth_links['fb_auth_link']; ?>" method="post" >
 
                                   <input type="hidden" name="api_token" value="<?php echo $api_token; ?>">
                                   <input type="hidden" name="s" value="facebook">
@@ -129,7 +129,7 @@
                               <div class="alert alert-info">
                                   <?php echo $text_info_group; ?>
                               </div>
-                              <form action="<?php echo $auth_links['tb_auth_link']; ?>" method="post" id="auth_ok">
+                              <form action="<?php echo $auth_links['tb_auth_link']; ?>" method="post" >
                                   <input type="hidden" name="api_token" value="<?php echo $api_token; ?>">
                                   <input type="hidden" name="s" value="tumblr">
                                   <input type="hidden" name="server_link" value="<?php echo $server_link; ?>&s=tb">
@@ -142,7 +142,7 @@
                               <div class="alert alert-info">
                                   <?php echo $text_info_group; ?>
                               </div>
-                              <form action="<?php echo $auth_links['tw_auth_link']; ?>" method="post" id="auth_ok">
+                              <form action="<?php echo $auth_links['tw_auth_link']; ?>" method="post" >
                                   <input type="hidden" name="api_token" value="<?php echo $api_token; ?>">
                                   <input type="hidden" name="s" value="twitter">
                                   <input type="hidden" name="server_link" value="<?php echo $server_link; ?>&s=tw">

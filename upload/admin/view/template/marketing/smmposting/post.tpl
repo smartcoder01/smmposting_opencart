@@ -223,9 +223,9 @@
 </div>
 
 <script type="text/javascript">
-        const today = "<?php echo $date_after_tommorrow; ?>";
-        const tomorrow = "<?php echo $date_tommorrow; ?>";
-        const after_tommorrow = '<?php echo $date_after_tommorrow; ?>';
+        const today = "<?php echo $date_today; ?>";
+        const tomorrow = "<?php echo $date_tomorrow; ?>";
+        const after_tomorrow = '<?php echo $date_after_tomorrow; ?>';
         const time_1 = '9';
         const time_2 = '14';
         const time_3 = '18';
@@ -239,7 +239,7 @@
 		});
 
 		$("#date_after_tomorrow").click(function () {
-			document.getElementById('date_public').value = after_tommorrow;
+			document.getElementById('date_public').value = after_tomorrow;
 		});
 
         $("#time_1").click(function () {

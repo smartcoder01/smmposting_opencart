@@ -443,7 +443,7 @@ class ControllerMarketingSmmposting extends Controller {
 		## Time
 		$data['date_today'] = date("Y-m-d");
 		$data['date_tomorrow'] = date('Y-m-d', strtotime("+1 day"));
-		$data['date_after_tommorrow'] = date('Y-m-d', strtotime("+2 day"));
+		$data['date_after_tomorrow'] = date('Y-m-d', strtotime("+2 day"));
 
 
 		//	OLD DATA
@@ -608,15 +608,15 @@ class ControllerMarketingSmmposting extends Controller {
 				unset($request['fb_account_id']);
 			}
 
-			if (!$request['ig_account_id']) {
+			if (isset($request['ig_account_id']) && !$request['ig_account_id']) {
 				unset($request['ig_account_id']);
 			}
 
-			if (!$request['tb_account_id']) {
+			if (isset($request['tb_account_id']) && !$request['tb_account_id']) {
 				unset($request['tb_account_id']);
 			}
 
-			if (!$request['tw_account_id']) {
+			if (isset($request['tw_account_id']) && !$request['tw_account_id']) {
 				unset($request['tw_account_id']);
 			}
 

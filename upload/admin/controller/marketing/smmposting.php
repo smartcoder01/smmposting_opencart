@@ -2,7 +2,7 @@
 
 /**
  * @package SMM-Posting for Opencart 2.3-3.0
- * @version 2.1
+ * @version 2.2
  * @author smartcoder & vladgaus
  * @copyright https://smm-posting.ru
  */
@@ -14,7 +14,7 @@ require_once DIR_SYSTEM.'library/smartcoder/smmposting.php';
 
 class ControllerMarketingSmmposting extends Controller {
 
-	private $version = '2.1';
+	private $version = '2.2';
 	private $auth = false;
 	private $smmposting;
 
@@ -386,7 +386,7 @@ class ControllerMarketingSmmposting extends Controller {
 
 			//	Response
 			if (isset($results->result->success) && $results->result->success == "Y") {
-				$this->deleteImages();
+				//$this->deleteImages();
 				unset($this->session->data['old']);
 				$this->session->data['success'] = $this->language->get('text_success');
 				$this->response->redirect($this->url->link('marketing/smmposting/posts', $this->token_to_link(), true));
@@ -560,22 +560,22 @@ class ControllerMarketingSmmposting extends Controller {
 			}
 
 			//	OK
-			if ($request['ok_account_id'] && !isset($request['ok_group_id'])) {
+			if (isset($request['ok_account_id']) && $request['ok_account_id'] && !isset($request['ok_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_9');
 			}
 
 			//	VK
-			if ($request['vk_account_id'] && !isset($request['vk_group_id'])) {
+			if (isset($request['vk_account_id']) && $request['vk_account_id'] && !isset($request['vk_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_10');
 			}
 
 			//	TG
-			if ($request['tg_account_id'] && empty($request['tg_chat_id'])) {
+			if (isset($request['tg_account_id']) && $request['tg_account_id'] && empty($request['tg_chat_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_11');
 			}
 
 			//	FB
-			if ($request['fb_account_id'] && !isset($request['fb_group_id'])) {
+			if (isset($request['fb_account_id']) && $request['fb_account_id'] && !isset($request['fb_group_id'])) {
 				$this->session->data['error_warning'] = $this->language->get('smmposting_error_12');
 			}
 
@@ -591,20 +591,20 @@ class ControllerMarketingSmmposting extends Controller {
 
 
 
-			if (!$request['ok_account_id'] && !isset($request['ok_group_id'])) {
+			if (isset($request['ok_account_id']) && !$request['ok_account_id'] && !isset($request['ok_group_id'])) {
 				unset($request['ok_account_id']);
 			}
 
-			if (!$request['vk_account_id'] && !isset($request['vk_group_id'])) {
+			if (isset($request['vk_account_id']) && !$request['vk_account_id'] && !isset($request['vk_group_id'])) {
 				unset($request['vk_account_id']);
 			}
 
-			if (!$request['tg_account_id'] && isset($request['tg_chat_id'])) {
+			if (isset($request['tg_account_id']) && !$request['tg_account_id'] && isset($request['tg_chat_id'])) {
 				unset($request['tg_account_id']);
 				unset($request['tg_chat_id']);
 			}
 
-			if (!$request['fb_account_id'] && !isset($request['fb_group_id'])) {
+			if (isset($request['fb_account_id']) && !$request['fb_account_id'] && !isset($request['fb_group_id'])) {
 				unset($request['fb_account_id']);
 			}
 
@@ -882,12 +882,12 @@ class ControllerMarketingSmmposting extends Controller {
 		$this->response->setOutput(json_encode($json, true));
 	}
 	public function deleteImages() {
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePermission()) {
-			$path = DIR_IMAGE. '/smmposting/';
-			return is_dir($path) ? rmdir($path) : true;
-		} else {
-			return false;
-		}
+//		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePermission()) {
+//			$path = DIR_IMAGE. '/smmposting/';
+//			return is_dir($path) ? rmdir($path) : true;
+//		} else {
+//			return false;
+//		}
 	}
 	private function getFormat($imageType, $format = false)
 	{

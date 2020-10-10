@@ -23,7 +23,7 @@
 <p>Posting Vkontakte, Odnoklassniki, Telegram, Instagram, Facebook, Tubmlr, Twitter for opencart <br />
    Integration with SMM-posting service for opencart<br />
 &nbsp;<br />
-<span style="color:#e74c3c"><span style="font-size:18px">Attention: payment for the module for 1 year.</span></span><br />
+<span style="color:#e74c3c"><span style="font-size:18px">Attention: payment for the module for 1 year with tariff SMM Basic. If you want to purchase a different rate, you can contact support for a paid upgrade to a higher rate</span></span><br />
 &nbsp;</p>
 
 <h2><strong>Module features:</strong></h2>

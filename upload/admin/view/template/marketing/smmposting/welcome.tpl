@@ -24,8 +24,8 @@
             </div>
 
             <h2 class="smm-heading-title mt-2"><?php echo $text_welcome_start; ?></h2>
-            <?php echo $text_welcome_instruction_1; ?> <a href="https://smm-posting.ru/register">https://smm-posting.ru/register</a> <br>
-            <?php echo $text_welcome_instruction_2; ?> <a href="https://smm-posting.ru/settings">https://smm-posting.ru/settings</a> <br>
+            <?php echo $text_welcome_instruction_1; ?> <a href="https://smm-posting.ru/register?utm_campaign=module-opencart&utm_source=opencart.com">https://smm-posting.ru/register</a> <br>
+            <?php echo $text_welcome_instruction_2; ?> <a href="https://smm-posting.ru/settings?utm_campaign=module-opencart&utm_source=opencart.com">https://smm-posting.ru/settings</a> <br>
             <?php echo $text_welcome_instruction_3; ?> <br>
             <?php echo $text_welcome_instruction_4; ?> <br>
 
